@@ -1,4 +1,4 @@
-# Handcraft-Heaven
+# Handcraft-Haven
 Team 14 project assignment for WDD430 - Fullstack Web Development
 
 # Overview
