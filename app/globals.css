@@ -1,26 +1,117 @@
+/* Import Google Fonts */
+@import url('https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@400;600&family=Lato:wght@300;400;700&family=Playfair+Display:wght@400;700&display=swap');
+/* Import tailwindcss libery */
 @import "tailwindcss";
 
 :root {
-  --background: #ffffff;
-  --foreground: #171717;
+  /* 
+    Primary Color
+    Use for: Logos, primary buttons, headers, highlights.
+  */
+  --color-primary: #B3511D;
+
+
+  /* 
+    Background 
+    Use for: Page backgrounds, cards, soft sections.
+  */
+  --color-background: #F3EBDD;
+
+  /* 
+    Text
+    Use for: Body text, navigation, input labels.
+  */
+  --color-text: #4A3B30;
+  --color-text-light: #fff;
+
+  /* 
+    Accent 
+    Use for: Secondary buttons, tags, icons, eco/sustainability highlights.
+  */
+  --color-accent: #8A9A5B;
+
+  /*
+    Optional Contrast Accent
+    Use for: Hover effects, alternate calls-to-action, footer backgrounds.
+  */
+  --color-contrast-accent: #59354A;
+
+  /* 
+    Hover 
+    Use for: Button hover, focus states.
+  */
+  --color-hover: #8E3D12;
+
+  /*********************
+  *** FONTS FAMILIES ***
+  *********************/
+  --font-heading: 'Playfair Display', serif;
+  --font-subheading: 'Cormorant Garamond', serif;
+  --font-body: 'Lato', sans-serif;
+
+
+  /********************
+  ****** SPACING ******
+  ********************/
+  --base-spacing: 0.5rem;
+  --large-spacing: 1rem;
 }
 
 @theme inline {
-  --color-background: var(--background);
-  --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
+  --color-background: var(--color-background);
+  --color-text: var(--color-text);
 }
 
 @media (prefers-color-scheme: dark) {
   :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
+    --color-background: #0a0a0a;
+    --color-text: #ededed;
   }
 }
 
+/* Global Styles */
 body {
-  background: var(--background);
-  color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+  font-family: var(--font-body);
+  background-color: var(--color-background);
+  color: var(--color-text);
+  margin: 0;
+  padding: 0;
+}
+
+h1,
+h2,
+h3 {
+  font-family: var(--font-heading);
+  color: var(--color-primary);
+}
+
+h4,
+h5,
+h6 {
+  font-family: var(--font-subheading);
+  color: var(--color-contrast-accent);
+}
+
+p,
+li,
+a,
+span {
+  font-family: var(--font-body);
+  color: var(--color-text);
+}
+
+/* Buttons */
+button {
+  font-family: var(--font-body);
+  background-color: var(--color-primary);
+  color: var(--color-text-light);
+  border: none;
+  padding: 0.6em 1.2em;
+  border-radius: 4px;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+
+button:hover {
+  background-color: var(--color-hover);
 }
