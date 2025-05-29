@@ -55,17 +55,14 @@
   --large-spacing: 1rem;
 }
 
-@theme inline {
-  --color-background: var(--color-background);
-  --color-text: var(--color-text);
-}
-
-@media (prefers-color-scheme: dark) {
+/* Uncomment to allow dark mode checking & theme selection based on computer user preference
+/* @media (prefers-color-scheme: dark) {
   :root {
     --color-background: #0a0a0a;
     --color-text: #ededed;
   }
-}
+} */
+
 
 /* Global Styles */
 body {
