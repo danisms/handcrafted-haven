@@ -20,13 +20,19 @@ interface CollectionItem {
 
 interface Product {
     id: string,
-    owner_id: number,
+    owner_id: string,
     name: string,
     price: number,
     product_images: Array<Image>,
     rating: Rating,
-    comments: Array<string>,
+    comments: Array<UserComment>,
     description: string,
+}
+
+type UserComment = {
+    name: string;
+    photo: Image;
+    comment: string;
 }
 
 interface Rating {
@@ -71,10 +77,10 @@ const drawingCollection: CollectionItem = {
             This collection showcases hand-drawn works, including sketches, doodles, line art, and detailed illustrations that bring imagination to life on paper.`,
     products: [
         {
-            id: 1,
-            owner_id: 1,
+            id: "1",
+            owner_id: "1",
             name: "The Old Wizard House",
-            price: 0,
+            price: 10000,
             product_images: [
                 {
                     source: "design/placeholders/drawing-3.jpg",
@@ -97,7 +103,7 @@ const drawingCollection: CollectionItem = {
                 likes: 0,
                 dislikes: 0,
             },
-            comments: [""],
+            comments: [],
             description: `<i>The Old Wizard House</i> is a hauntingly beautiful hand-drawn ink piece that transports viewers into a forgotten realm of magic and mystery. With every line etched in rich, deliberate detail, this artwork captures the eerie charm of an abandoned wizard's dwelling—weathered by time, yet alive with whispered secrets.<br><br>
                             The crooked structure stands solemnly under a pale sky, its arched doors and steep gables guarded by barren trees and a colony of bats in flight. A raven perches ominously on a twisted branch, as though awaiting the return of the wizard who once practiced ancient rituals within these walls. From the cracked steps to the sagging roof and skeletal picket fence, every stroke tells a story of enchantment, solitude, and lingering power.<br><br>
                             This artwork is a must-have for collectors of gothic, fantasy, or Halloween-themed pieces. Its fine craftsmanship and evocative narrative invite curiosity, contemplation, and admiration. Whether displayed in a cozy study, gallery wall, or curated collection, <i>The Old Wizard House</i> is more than a drawing—it’s a portal to another world.<br><br>
@@ -118,8 +124,8 @@ const paintingCollection: CollectionItem = {
             Explore original paintings created with mediums like watercolor, acrylic, oil, and mixed media — each stroke telling a unique story crafted by an artist’s hands.`,
     products: [
         {
-            id: 1,
-            owner_id: 1,
+            id: "1",
+            owner_id: "1",
             name: "",
             price: 0,
             product_images: [
@@ -132,7 +138,7 @@ const paintingCollection: CollectionItem = {
                 likes: 0,
                 dislikes: 0,
             },
-            comments: [""],
+            comments: [],
             description: ""
         },
     ]
@@ -150,8 +156,8 @@ const sculpureCollection: CollectionItem = {
             This collection includes 3D creations made from wood, clay, stone, or metal — hand-carved and sculpted to perfection, blending texture, form, and vision.`,
     products: [
         {
-            id: 1,
-            owner_id: 1,
+            id: "1",
+            owner_id: "1",
             name: "",
             price: 0,
             product_images: [
@@ -164,7 +170,7 @@ const sculpureCollection: CollectionItem = {
                 likes: 0,
                 dislikes: 0,
             },
-            comments: [""],
+            comments: [],
             description: ""
         },
     ]
@@ -182,8 +188,8 @@ const fiberArtCollection: CollectionItem = {
             Celebrate the art of fiber through handmade embroidery, sewing, knitting, crocheting, quilting, and macramé — where each thread is a labor of love.`,
     products: [
         {
-            id: 1,
-            owner_id: 1,
+            id: "1",
+            owner_id: "1",
             name: "",
             price: 0,
             product_images: [
@@ -196,7 +202,7 @@ const fiberArtCollection: CollectionItem = {
                 likes: 0,
                 dislikes: 0,
             },
-            comments: [""],
+            comments: [],
             description: ""
         },
     ]
@@ -214,8 +220,8 @@ const jewelriesCollection: CollectionItem = {
             Featuring unique earrings, necklaces, bracelets, bags, and more — this collection highlights artisan-crafted pieces that blend fashion with craftsmanship.`,
     products: [
         {
-            id: 1,
-            owner_id: 1,
+            id: "1",
+            owner_id: "1",
             name: "",
             price: 0,
             product_images: [
@@ -228,7 +234,7 @@ const jewelriesCollection: CollectionItem = {
                 likes: 0,
                 dislikes: 0,
             },
-            comments: [""],
+            comments: [],
             description: ""
         },
     ]
@@ -246,8 +252,8 @@ const homeDecorCollection: CollectionItem = {
             Find handmade items that transform spaces into sanctuaries — including wall hangings, pottery, candles, planters, furniture, and other decorative accents.`,
     products: [
         {
-            id: 1,
-            owner_id: 1,
+            id: "1",
+            owner_id: "1",
             name: "",
             price: 0,
             product_images: [
@@ -260,7 +266,7 @@ const homeDecorCollection: CollectionItem = {
                 likes: 0,
                 dislikes: 0,
             },
-            comments: [""],
+            comments: [],
             description: ""
         },
     ]
@@ -278,8 +284,8 @@ const paperCraftCollection: CollectionItem = {
             A celebration of creativity on paper — this collection includes handcrafted greeting cards, journals, origami, scrapbooks, calligraphy, and more.`,
     products: [
         {
-            id: 1,
-            owner_id: 1,
+            id: "1",
+            owner_id: "1",
             name: "",
             price: 0,
             product_images: [
@@ -292,7 +298,7 @@ const paperCraftCollection: CollectionItem = {
                 likes: 0,
                 dislikes: 0,
             },
-            comments: [""],
+            comments: [],
             description: ""
         },
     ]
@@ -310,8 +316,8 @@ const othersCollection: CollectionItem = {
             Discover a curated collection of extraordinary handcrafted pieces that don’t fit into a single category — from experimental designs to unexpected treasures that showcase true artistic freedom.`,
     products: [
         {
-            id: 1,
-            owner_id: 1,
+            id: "1",
+            owner_id: "1",
             name: "Colorful Baskets",
             price: 20000,  // in cent/kobo
             product_images: [
@@ -324,7 +330,7 @@ const othersCollection: CollectionItem = {
                 likes: 0,
                 dislikes: 0,
             },
-            comments: [""],
+            comments: [],
             description: "What a colorful basket made from palm tree leaves. The basket can hold a heavy load of 60kg for as long as 8 hours with the basket suspended on the air with the hand attached to handle."
         },
     ]
