@@ -2,6 +2,23 @@
   "name": "handcraft",
   "version": "0.1.0",
   "private": true,
+  "authors": [
+    {
+      "name": "Daniel C. Opute",
+      "email": "danielcopute@gmail.com",
+      "github": "https://github.com/danisms"
+    },
+    {
+      "name": "Gustavo Lima de Sousa",
+      "email": "gustavolimadesousa@hotmail.com",
+      "github": "https://github.com/gustavolimadesousa"
+    },
+    {
+      "name": "Lucas Mendonca de Souza",
+      "email": "lsouza@byupathway.edu",
+      "github": "https://github.com/lmspathway"
+    }
+  ],
   "scripts": {
     "dev": "next dev --turbopack",
     "build": "next build",
