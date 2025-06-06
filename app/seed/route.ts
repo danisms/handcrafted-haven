@@ -1,3 +1,5 @@
+// add initial working place holder data to db
+
 import bcrypt from 'bcryptjs';
 import postgres from 'postgres';
 
