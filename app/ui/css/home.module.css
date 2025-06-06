@@ -1,0 +1,4 @@
+.homeContentContainer {
+    display: grid;
+    row-gap: var(--large-spacing);
+}

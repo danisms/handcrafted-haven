@@ -1,17 +1,26 @@
 // This file contains placeholder data that we'll be replacing with real data
 
+import { LinkProps } from "next/link";
+
 /****************************
 *** CREATE TYPE STRUCTURE *** 
 ****************************/
 type Image = {
-    source: string,
-    alt: string,
+    title?: string,
+    source: string;
+    alt: string;
+    link?: ButtonLink;
+}
+
+type ButtonLink = {
+    url: string | LinkProps;
+    ancor_text: string;
 }
 
 type HeroImage = Array<Image>
 
 interface CollectionItem {
-    id: string,
+    id: number,
     title: string,
     about: string,
     image: Image,
@@ -19,8 +28,8 @@ interface CollectionItem {
 }
 
 interface Product {
-    id: string,
-    owner_id: string,
+    id: number,
+    owner_id: number,
     name: string,
     price: number,
     product_images: Array<Image>,
@@ -30,6 +39,7 @@ interface Product {
 }
 
 type UserComment = {
+    id: string,
     name: string;
     photo: Image;
     comment: string;
@@ -41,22 +51,26 @@ interface Rating {
 }
 
 type Artisan = {
-    id: string;
+    id: number;
     display_name: string;
     gender: "m" | "f";
     about: string;
     profile_photo: string;
     banner: string;
-    user_id: string;
+    user_id: number;
 }
 
 type Artisans = Array<Artisan>
 
 type User = {
-    id: string;
+    id: number;
+    firstname: string;
+    lastname: string;
+    user_photo: string;
     username: string;
     email: string;
     password: string;
+    access: "read-only" | "admin" | "full-control"
 }
 
 type Users = Array<User>;
@@ -66,7 +80,7 @@ type Users = Array<User>;
 *** create collections placeholder data *** 
 ******************************************/
 const drawingCollection: CollectionItem = {
-    id: "1",
+    id: 1,
     title: "Drawing & Sketch",
     image: {
         source: "design/placeholders/drawing-2.jpg",
@@ -77,8 +91,8 @@ const drawingCollection: CollectionItem = {
             This collection showcases hand-drawn works, including sketches, doodles, line art, and detailed illustrations that bring imagination to life on paper.`,
     products: [
         {
-            id: "1",
-            owner_id: "1",
+            id: 1,
+            owner_id: 1,
             name: "The Old Wizard House",
             price: 10000,
             product_images: [
@@ -113,7 +127,7 @@ const drawingCollection: CollectionItem = {
 }
 
 const paintingCollection: CollectionItem = {
-    id: "2",
+    id: 2,
     title: "Painting",
     image: {
         source: "design/placeholders/painting-2.jpeg",
@@ -124,8 +138,8 @@ const paintingCollection: CollectionItem = {
             Explore original paintings created with mediums like watercolor, acrylic, oil, and mixed media — each stroke telling a unique story crafted by an artist’s hands.`,
     products: [
         {
-            id: "1",
-            owner_id: "1",
+            id: 1,
+            owner_id: 1,
             name: "",
             price: 0,
             product_images: [
@@ -145,7 +159,7 @@ const paintingCollection: CollectionItem = {
 }
 
 const sculpureCollection: CollectionItem = {
-    id: "3",
+    id: 3,
     title: "Sculpure & Carving",
     image: {
         source: "design/placeholders/molding-2.jpg",
@@ -156,8 +170,8 @@ const sculpureCollection: CollectionItem = {
             This collection includes 3D creations made from wood, clay, stone, or metal — hand-carved and sculpted to perfection, blending texture, form, and vision.`,
     products: [
         {
-            id: "1",
-            owner_id: "1",
+            id: 1,
+            owner_id: 1,
             name: "",
             price: 0,
             product_images: [
@@ -177,7 +191,7 @@ const sculpureCollection: CollectionItem = {
 }
 
 const fiberArtCollection: CollectionItem = {
-    id: "4",
+    id: 4,
     title: "Textile & Fiber Art",
     image: {
         source: "design/placeholders/textile.jpg",
@@ -188,8 +202,8 @@ const fiberArtCollection: CollectionItem = {
             Celebrate the art of fiber through handmade embroidery, sewing, knitting, crocheting, quilting, and macramé — where each thread is a labor of love.`,
     products: [
         {
-            id: "1",
-            owner_id: "1",
+            id: 1,
+            owner_id: 1,
             name: "",
             price: 0,
             product_images: [
@@ -209,7 +223,7 @@ const fiberArtCollection: CollectionItem = {
 }
 
 const jewelriesCollection: CollectionItem = {
-    id: "5",
+    id: 5,
     title: "Jewelry & Accessories",
     image: {
         source: "design/placeholders/jewelry-2.jpg",
@@ -220,8 +234,8 @@ const jewelriesCollection: CollectionItem = {
             Featuring unique earrings, necklaces, bracelets, bags, and more — this collection highlights artisan-crafted pieces that blend fashion with craftsmanship.`,
     products: [
         {
-            id: "1",
-            owner_id: "1",
+            id: 1,
+            owner_id: 1,
             name: "",
             price: 0,
             product_images: [
@@ -241,7 +255,7 @@ const jewelriesCollection: CollectionItem = {
 }
 
 const homeDecorCollection: CollectionItem = {
-    id: "6",
+    id: 6,
     title: "Home & Decor",
     image: {
         source: "design/placeholders/home-decor-2.jpg",
@@ -252,8 +266,8 @@ const homeDecorCollection: CollectionItem = {
             Find handmade items that transform spaces into sanctuaries — including wall hangings, pottery, candles, planters, furniture, and other decorative accents.`,
     products: [
         {
-            id: "1",
-            owner_id: "1",
+            id: 1,
+            owner_id: 1,
             name: "",
             price: 0,
             product_images: [
@@ -273,7 +287,7 @@ const homeDecorCollection: CollectionItem = {
 }
 
 const paperCraftCollection: CollectionItem = {
-    id: "7",
+    id: 7,
     title: "Paper Craft",
     image: {
         source: "design/placeholders/paper-2.jpg",
@@ -284,8 +298,8 @@ const paperCraftCollection: CollectionItem = {
             A celebration of creativity on paper — this collection includes handcrafted greeting cards, journals, origami, scrapbooks, calligraphy, and more.`,
     products: [
         {
-            id: "1",
-            owner_id: "1",
+            id: 1,
+            owner_id: 1,
             name: "",
             price: 0,
             product_images: [
@@ -305,7 +319,7 @@ const paperCraftCollection: CollectionItem = {
 }
 
 const othersCollection: CollectionItem = {
-    id: "8",
+    id: 8,
     title: "Creative Finds",
     image: {
         source: "design/placeholders/others-2.jpg",
@@ -316,8 +330,8 @@ const othersCollection: CollectionItem = {
             Discover a curated collection of extraordinary handcrafted pieces that don’t fit into a single category — from experimental designs to unexpected treasures that showcase true artistic freedom.`,
     products: [
         {
-            id: "1",
-            owner_id: "1",
+            id: 1,
+            owner_id: 1,
             name: "Colorful Baskets",
             price: 20000,  // in cent/kobo
             product_images: [
@@ -343,12 +357,21 @@ const othersCollection: CollectionItem = {
 // creating hero placeholder content data
 export const heroImages: HeroImage = [
     {
+        title: "enjoy the awesome feel of hand made crafts",
         source: "design/placeholders/hero-1.jpg",
-        alt: "Image of hands molding with clay"
+        alt: "Image of hands molding with clay",
+        link: {
+            url: "",
+            ancor_text: "brows collection"
+        }
     },
     {
         source: "design/placeholders/hero-2.jpg",
-        alt: "Interior home decor made with hands"
+        alt: "Interior home decor made with hands",
+        link: {
+            url: "",
+            ancor_text: "view crafts"
+        }
     }
 ]
 
@@ -367,7 +390,7 @@ export const collections = {
 // creating artisans
 export const artisans: Artisans = [
     {
-        id: "1",
+        id: 1,
         display_name: "artistic giant",
         about: `<b>About Artistic Giant</b><br><br>
                     Welcome to the world of <b>Artistic Giant</b> — where imagination takes form, color finds purpose, and raw creativity is sculpted into timeless expressions. Artistic Giant is more than just an artisan name; it's a bold declaration of mastery in the visual arts, rooted in passion, precision, and storytelling.<br><br>
@@ -378,16 +401,20 @@ export const artisans: Artisans = [
         profile_photo: "placeholders/default-avatar-profile-icon.png",
         banner: "design/placeholders/yin-yang.png",
         gender: 'm',
-        user_id: "1"
+        user_id: 1
     },
 ]
 
 // creating user accounts
 export const users: Users = [
     {
-        id: "1",
+        id: 1,
         username: "artuser",
+        firstname: "daniel",
+        lastname: "opute",
+        user_photo: "",
         email: "artuser@example.com",
-        password: "123456@password"
+        password: "123456@password",
+        access: "full-control",
     }
 ]
