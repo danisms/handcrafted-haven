@@ -415,6 +415,6 @@ export const users: Users = [
         user_photo: "",
         email: "artuser@example.com",
         password: "123456@password",
-        access: "full-control",
+        access: "full-control"
     }
 ]
