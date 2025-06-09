@@ -29,7 +29,7 @@ CREATE TABLE artisan (
     about TEXT,
     profile_photo TEXT,
     banner TEXT,
-    user_id UUID NOT NULL REFERENCES "user"(id),
+    user_id UUID NOT NULL REFERENCES "user"(id) ON DELETE CASCADE,
     created_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP
 );
 
@@ -51,8 +51,8 @@ CREATE TABLE product (
     name VARCHAR(100) NOT NULL,
     price DOUBLE PRECISION,
     description TEXT,
-    owner_id UUID NOT NULL REFERENCES artisan(id),
-    collection_id UUID NOT NULL REFERENCES collection(id),
+    owner_id UUID NOT NULL REFERENCES artisan(id) ON DELETE CASCADE,
+    collection_id UUID NOT NULL REFERENCES collection(id) ON DELETE SET NULL,
     created_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP
 );
 
@@ -77,7 +77,7 @@ CREATE TABLE product_image (
     id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
     source TEXT NOT NULL,
     alt VARCHAR(100) NOT NULL,
-    product_id UUID NOT NULL REFERENCES product(id),
+    product_id UUID NOT NULL REFERENCES product(id) ON DELETE CASCADE,
     created_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP
 );
 
@@ -85,10 +85,10 @@ CREATE TABLE product_image (
 DROP TABLE IF EXISTS product_comment CASCADE;
 CREATE TABLE product_comment (
     id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
-    parent_id UUID,
+    parent_id UUID REFERENCES product_comment(id) ON DELETE CASCADE,
     comments JSON NOT NULL,
-    product_id UUID NOT NULL REFERENCES product(id),
-    user_id UUID REFERENCES "user"(id),
+    product_id UUID NOT NULL REFERENCES product(id) ON DELETE CASCADE,
+    user_id UUID REFERENCES "user"(id) ON DELETE SET NULL,
     created_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP
 );
 COMMENT ON COLUMN product_comment.parent_id IS 'For replies to comments';
@@ -98,8 +98,8 @@ COMMENT ON COLUMN product_comment.comments IS 'A list of comment objects made, w
 DROP TABLE IF EXISTS product_rating CASCADE;
 CREATE TABLE product_rating (
     id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
-    product_id UUID NOT NULL REFERENCES product(id),
-    user_id UUID NOT NULL REFERENCES "user"(id),
+    product_id UUID NOT NULL REFERENCES product(id) ON DELETE CASCADE,
+    user_id UUID NOT NULL REFERENCES "user"(id) ON DELETE CASCADE,
     rate rating_enum NOT NULL,
     created_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
     updates JSON,
