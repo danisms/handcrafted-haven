@@ -93,7 +93,7 @@ const drawingCollection: CollectionItem = {
     id: "4f8c4611-f42c-4a5d-81a0-fe2e6bb972a0",
     title: "Drawing & Sketch",
     image: {
-        source: "placeholders/collection_images/drawing-2.jpg",
+        source: "/placeholders/collection_images/drawing-2.jpg",
         alt: "Image of a drawn face illusion",
     },
     about: `<b>Drawings & Sketches</b><br>
@@ -108,22 +108,22 @@ const drawingCollection: CollectionItem = {
             product_images: [
                 {
                     product_id: "edf00379-fa68-46e0-9cd5-ae5fa7a05293",
-                    source: "placeholders/product_images/drawing-3.jpg",
+                    source: "/placeholders/product_images/drawing-3.jpg",
                     alt: "Drawing of the old wizard's house"
                 },
                 {
                     product_id: "edf00379-fa68-46e0-9cd5-ae5fa7a05293",
-                    source: "placeholders/product_images/framed-house-drawing.png",
+                    source: "/placeholders/product_images/framed-house-drawing.png",
                     alt: "Framed Drawing of the old wizard's house"
                 },
                 {
                     product_id: "edf00379-fa68-46e0-9cd5-ae5fa7a05293",
-                    source: "placeholders/product_images/handed-framed-house-drawing.png",
+                    source: "/placeholders/product_images/handed-framed-house-drawing.png",
                     alt: "Framed Drawing of the old wizard's house, in a living room"
                 },
                 {
                     product_id: "edf00379-fa68-46e0-9cd5-ae5fa7a05293",
-                    source: "placeholders/product_images/handed-framed-house-drawing-more-distanced.png",
+                    source: "/placeholders/product_images/handed-framed-house-drawing-more-distanced.png",
                     alt: "Framed Drawing of the old wizard's house, in a living room from distance"
                 }
             ],
@@ -145,7 +145,7 @@ const paintingCollection: CollectionItem = {
     id: "0216fc0f-7ecc-4230-b986-4f176a509b26",
     title: "Painting",
     image: {
-        source: "placeholders/collection_images/painting-2.jpeg",
+        source: "/placeholders/collection_images/painting-2.jpeg",
         alt: "An image of a woman painting",
     },
     about: `<b>Paintings</b><br>
@@ -157,7 +157,7 @@ const sculpureCollection: CollectionItem = {
     id: "c0e8aaf5-75ee-49b8-a2be-409bdd8f66d1",
     title: "Sculpure & Carving",
     image: {
-        source: "placeholders/collection_images/molding-2.jpg",
+        source: "/placeholders/collection_images/molding-2.jpg",
         alt: "An image of a molding clay pot",
     },
     about: `<b>Sculptures & Carvings</b><br>
@@ -169,7 +169,7 @@ const fiberArtCollection: CollectionItem = {
     id: "58256eca-03c6-4f9b-9eb0-550f1a0cda97",
     title: "Textile & Fiber Art",
     image: {
-        source: "placeholders/collection_images/textile.jpg",
+        source: "/placeholders/collection_images/textile.jpg",
         alt: "Textile making in progress",
     },
     about: `<b>Textiles & Fabric Crafts</b><br>
@@ -181,7 +181,7 @@ const jewelriesCollection: CollectionItem = {
     id: "70d86b07-91ba-47b1-bf3f-6aee05db845a",
     title: "Jewelry & Accessories",
     image: {
-        source: "placeholders/collection_images/jewelry-2.jpg",
+        source: "/placeholders/collection_images/jewelry-2.jpg",
         alt: "A photo of many hand made jewelries",
     },
     about: `<b>Jewelry & Accessories</b><br>
@@ -193,7 +193,7 @@ const homeDecorCollection: CollectionItem = {
     id: "091e7deb-d50f-499e-bd23-3bfe7eb118c3",
     title: "Home & Decor",
     image: {
-        source: "placeholders/collection_images/home-decor-2.jpg",
+        source: "/placeholders/collection_images/home-decor-2.jpg",
         alt: "Interior home decor made with hands",
     },
     about: `<b>Home Decor</b><br>
@@ -205,7 +205,7 @@ const paperCraftCollection: CollectionItem = {
     id: "1c7f518e-65bd-4dc2-bf98-826bd3ada99b",
     title: "Paper Craft",
     image: {
-        source: "placeholders/collection_images/paper-2.jpg",
+        source: "/placeholders/collection_images/paper-2.jpg",
         alt: "Craft made from paper",
     },
     about: `<b>Paper Crafts</b><br>
@@ -217,7 +217,7 @@ const othersCollection: CollectionItem = {
     id: "c5989af1-ebf7-4546-9ce4-03d55198b9ea",
     title: "Creative Finds",
     image: {
-        source: "placeholders/collection_images/others-2.jpg",
+        source: "/placeholders/collection_images/others-2.jpg",
         alt: "Image of hand crafted baskets",
     },
     about: `<b>Creative Finds</b><br>
@@ -232,7 +232,7 @@ const othersCollection: CollectionItem = {
             product_images: [
                 {
                     product_id: "1672723a-6ea8-457f-8082-8ccc99dc2d70",
-                    source: "placeholders/product_images/others-2.jpg",
+                    source: "/placeholders/product_images/others-2.jpg",
                     alt: "Image of hand made baskets"
                 }
             ],
@@ -255,7 +255,7 @@ const othersCollection: CollectionItem = {
 export const heroImages: HeroImage = [
     {
         title: "enjoy the awesome feel of hand made crafts",
-        source: "design/placeholders/hero-1.jpg",
+        source: "/design/placeholders/hero-1.jpg",
         alt: "Image of hands molding with clay",
         description: "",
         link: {
@@ -265,7 +265,7 @@ export const heroImages: HeroImage = [
     },
     {
         title: "",
-        source: "design/placeholders/hero-2.jpg",
+        source: "/design/placeholders/hero-2.jpg",
         alt: "Interior home decor made with hands",
         description: "Here is life at it's fullest! Transform your home into a heaven on earth, this is posible with awesome crafts.",
         link: {
