@@ -53,6 +53,7 @@
   ********************/
   --base-spacing: 0.5rem;
   --large-spacing: 1rem;
+  --huge-spacing: 3rem;
 }
 
 /* Uncomment to allow dark mode checking & theme selection based on computer user preference
@@ -65,18 +66,17 @@
 
 
 /* Global Styles */
-html,
-body {
-  height: 100%;
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
 }
 
 body {
-  max-width: 1600px;
   font-family: var(--font-body);
   background-color: var(--color-background);
   color: var(--color-text);
   margin: 0 auto;
-  padding: 0;
 }
 
 h1,
@@ -98,6 +98,7 @@ li,
 a,
 span {
   font-family: var(--font-body);
+  color: var(--color-text);
 }
 
 /* Buttons */
@@ -116,4 +117,38 @@ button:hover {
   background-color: var(--color-hover);
 }
 
+img {
+  width: 100%;
+  height: auto;
+}
 
+/* GENERAL STYLING */
+.hero-section {
+  width: 100%;
+  max-height: 720px;
+  background-color: blue;
+  overflow: hidden;
+}
+
+.slide-cards-container {
+  background-color: red;
+  width: 100%;
+  height: auto;
+  padding: var(--base-spacing);
+}
+
+/**************************************
+**** LARGER SCREEN VERSION STYLING ****
+**************************************/
+@media screen and (min-width: 500px) {
+  * {
+    --base-spacing: var(--large-spacing);
+    --large-spacing: var(--huge-spacing);
+  }
+
+  body {
+    max-width: 1600px;
+    margin: auto;
+    box-shadow: 0 0 10px var(--accent-1);
+  }
+}
