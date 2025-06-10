@@ -2,8 +2,6 @@ import styles from "@/app/ui/css/home.module.css";
 import Header from "@/app/components/header";
 import Footer from "@/app/components/footer";
 import { Metadata } from 'next';
-import { Suspense } from "react";
-import { CardSkeleton } from "./ui/skeletons";
 
 // Add meta data to overide the parent layout metadata
 export const metadata: Metadata = {
