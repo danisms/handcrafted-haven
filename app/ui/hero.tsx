@@ -20,7 +20,6 @@ export default async function HeroSection() {
 
     return (
         <>
-            <h1>{title}</h1>
             <div className="hero-container">
                 <Image
                     src={source}
@@ -29,7 +28,11 @@ export default async function HeroSection() {
                     height={500}
                 />
             </div>
-            {link.url ? <Link href={`${typeof link.url === "string" ? link.url : link.url.href}`} ><span>{link.ancor_text}</span></Link> : null }
+            <div className="shade"></div>
+            <div className="hero-text-holder">
+                <h1 className="hero-title">{title}</h1>
+                {link.url ? <Link href={`${typeof link.url === "string" ? link.url : link.url.href}`} className="hero-button-link" ><button>{link.ancor_text}</button></Link> : null}
+            </div>
         </>
     )
 

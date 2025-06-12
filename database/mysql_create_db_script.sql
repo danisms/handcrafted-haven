@@ -72,7 +72,6 @@ CREATE TABLE IF NOT EXISTS `handcrafted_haven`.`collection` (
   `about` TEXT NULL,
   `image` TEXT NULL COMMENT 'An object of this form\n{\n        source: \"\",\n        alt: \"\"\n }',
   `created_at` TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP(),
-  PRIMARY KEY (`id`),
   UNIQUE INDEX `id_UNIQUE` (`id` ASC) VISIBLE,
   UNIQUE INDEX `title_UNIQUE` (`title` ASC) VISIBLE)
 ENGINE = InnoDB;
@@ -189,10 +188,10 @@ CREATE TABLE IF NOT EXISTS `handcrafted_haven`.`product_rating` (
   `rate` ENUM("like", "dislike") NOT NULL,
   `created_at` TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP(),
   `updates` TEXT NULL COMMENT 'A list of timestamp updates made in ratting',
-  PRIMARY KEY (`id`),
   UNIQUE INDEX `id_UNIQUE` (`id` ASC) VISIBLE,
   INDEX `fk_product_rating_product1_idx` (`product_id` ASC) VISIBLE,
   INDEX `fk_product_rating_user1_idx` (`user_id` ASC) VISIBLE,
+  PRIMARY KEY (`product_id`, `user_id`),
   CONSTRAINT `fk_product_rating_product1`
     FOREIGN KEY (`product_id`)
     REFERENCES `handcrafted_haven`.`product` (`id`)

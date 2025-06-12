@@ -12,7 +12,7 @@ export default function Footer() {
             alt="Handcrafted Haven Logo"
             width={180}
             height={180}
-            className="mb-4"
+            className="footer-logo mb-4"
           />
         </div>
 

@@ -14,7 +14,7 @@
     Use for: Page backgrounds, cards, soft sections.
   */
   --color-background: #F3EBDD;
-
+  --color-background-2: #e6decf;
   /* 
     Text
     Use for: Body text, navigation, input labels.
@@ -33,7 +33,6 @@
     Use for: Hover effects, alternate calls-to-action, footer backgrounds.
   */
   --color-contrast-accent: #59354A;
-
   /* 
     Hover 
     Use for: Button hover, focus states.
@@ -51,9 +50,10 @@
   /********************
   ****** SPACING ******
   ********************/
+  --small-spacing: 0.5rem;
   --base-spacing: 0.5rem;
   --large-spacing: 1rem;
-  --huge-spacing: 3rem;
+  --huge-spacing: 2rem;
 }
 
 /* Uncomment to allow dark mode checking & theme selection based on computer user preference
@@ -67,16 +67,22 @@
 
 /* Global Styles */
 * {
-  margin: 0;
-  padding: 0;
   box-sizing: border-box;
 }
 
+html,
 body {
+  height: 100%;
+}
+
+body {
+  max-width: 1600px;
   font-family: var(--font-body);
   background-color: var(--color-background);
   color: var(--color-text);
   margin: 0 auto;
+  padding: 0;
+  font-size: 12px;
 }
 
 h1,
@@ -84,6 +90,19 @@ h2,
 h3 {
   font-family: var(--font-heading);
   color: var(--color-primary);
+  text-transform: capitalize;
+}
+
+h1 {
+  font-size: 3em;
+  font-weight: 400;
+  text-shadow: 0 0 5px var(--color-text);
+}
+
+h2 {
+  font-size: 1.5em;
+  font-weight: bold;
+  text-transform: uppercase;
 }
 
 h4,
@@ -98,12 +117,16 @@ li,
 a,
 span {
   font-family: var(--font-body);
-  color: var(--color-text);
+}
+
+abbr {
+  text-decoration: none;
 }
 
 /* Buttons */
 button {
   font-family: var(--font-body);
+  text-transform: capitalize;
   background-color: var(--color-primary);
   color: var(--color-text-light);
   border: none;
@@ -117,24 +140,268 @@ button:hover {
   background-color: var(--color-hover);
 }
 
+
 img {
   width: 100%;
   height: auto;
+}
+
+.shade {
+  width: 100%;
+  height: 100%;
+  display: block;
+  background-color: rgba(0, 0, 0, 0.25);
 }
 
 /* GENERAL STYLING */
 .hero-section {
   width: 100%;
   max-height: 720px;
-  background-color: blue;
+  /* background-color: blue; */
   overflow: hidden;
+  display: grid;
+}
+
+.hero-section>* {
+  grid-column: 1/2;
+  grid-row: 1/2;
+  width: 100%;
+  height: 100%;
+}
+
+.hero-text-holder {
+  display: block;
+  justify-items: center;
+}
+
+.hero-title {
+  /* font-size: 2.5em; */
+  color: var(--color-text-light);
+  text-transform: capitalize;
+  text-align: center;
+}
+
+section {
+  margin-top: var(--large-spacing);
+  padding: var(--base-spacing);
 }
 
 .slide-cards-container {
-  background-color: red;
   width: 100%;
+  display: grid;
+  gap: var(--base-spacing);
+  overflow-x: auto;
+  scrollbar-width: none;
+}
+
+.slide-cards-container>* {
+  grid-row: 1/2;
+}
+
+.cardTag {
+  /* border: 1px solid var(--color-primary); */
+  border-radius: 10px;
+  background-color: var(--color-primary);
+  color: var(--color-text-light);
+  padding: var(--small-spacing);
+  width: fit-content;
+  height: fit-content;
+}
+
+.contacts-holder {
+  width: 100%;
+  display: flex;
+  justify-content: space-evenly;
+}
+
+
+/* COLLECTION STYLING START */
+.collectionHolder {
+  width: 350px;
   height: auto;
+  border: 1px solid var(--color-primary);
+  border-radius: 10px;
+  padding: var(--small-spacing);
+  display: grid;
+}
+
+.collectionHolder>* {
+  grid-column: 1/2;
+  grid-row: 1/2;
+}
+
+.collectionDetailHolder {
   padding: var(--base-spacing);
+}
+
+.collectionDetailHolder .image-holder {
+  width: 100%;
+  height: 300px;
+  overflow: hidden;
+  display: block;
+  justify-content: center;
+  align-content: center;
+  background: var(--color-background-2);
+}
+
+.collectionDetailHolder a {
+  display: block;
+  margin: var(--large-spacing) 0;
+}
+
+/* COLLECTION STYLING END */
+
+/****************************
+*** ARTISAN STYLING START ***
+****************************/
+/* Artisan Card Styling */
+.artisanHolder {
+  width: 350px;
+  height: auto;
+  border: 1px solid var(--color-primary);
+  border-radius: 10px;
+  padding: var(--small-spacing);
+  display: grid;
+}
+
+.artisanHolder>* {
+  grid-column: 1/2;
+  grid-row: 1/2;
+}
+
+.artisanDetailHolder {
+  margin: var(--small-spacing);
+  padding: var(--base-spacing);
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  background-color: var(--color-background-2);
+}
+
+.artisanDetailHolder .image-holder {
+  width: 150px;
+  height: 150px;
+  border-radius: 100%;
+  border: 1px solid var(--color-primary);
+  overflow: hidden;
+  justify-self: center;
+  align-self: center;
+}
+
+.artisanDetailHolder h3 {
+  text-transform: capitalize;
+  /* color: var(--color-text-light); */
+}
+
+.artisanDetailHolder .artisan-features-holder {
+  display: grid;
+}
+
+.artisanDetailHolder section {
+  margin: 0;
+  justify-self: center;
+  align-self: center;
+}
+
+.artisanDetailHolder .about-section-holder {
+  grid-column: 1/3;
+}
+
+/*** ARTISAN STYLING END */
+
+
+/****************************
+*** PRODUCT STYLING START ***
+****************************/
+.productHolder {
+  width: 350px;
+  height: auto;
+  border: 1px solid var(--color-primary);
+  border-radius: 10px;
+  padding: var(--small-spacing);
+  display: grid;
+}
+
+.productHolder>* {
+  grid-column: 1/2;
+  grid-row: 1/2;
+}
+
+.productDetailHolder {
+  padding: var(--base-spacing);
+}
+
+.productDetailHolder .image-holder {
+  width: 100%;
+  height: 300px;
+  overflow: hidden;
+  display: block;
+  justify-content: center;
+  align-content: center;
+  background: var(--color-background-2);
+}
+
+.productDetailHolder a {
+  display: block;
+  margin: var(--large-spacing) 0;
+}
+
+/* PRODUCT STYLING END */
+
+
+/******************************
+*** DEVELOPER STYLING START ***
+******************************/
+/* Developer Card Styling */
+.devHolder {
+  width: 350px;
+  height: auto;
+  border: 1px solid var(--color-primary);
+  border-radius: 10px;
+  padding: var(--small-spacing);
+  display: grid;
+}
+
+.devHolder>* {
+  grid-column: 1/2;
+  grid-row: 1/2;
+}
+
+.devDetailHolder {
+  margin: var(--small-spacing);
+  padding: var(--base-spacing);
+  display: grid;
+  background-color: var(--color-background-2);
+}
+
+.devDetailHolder .image-holder {
+  width: 220px;
+  height: 220px;
+  border-radius: 100%;
+  border: 1px solid var(--color-primary);
+  display: block;
+  overflow: hidden;
+  justify-self: center;
+  align-self: center;
+}
+
+.devDetailHolder h3 {
+  text-transform: capitalize;
+  /* color: var(--color-text-light); */
+}
+
+.devDetailHolder section {
+  margin: 0;
+  justify-self: center;
+  align-self: center;
+}
+
+.devDetailHolder .about-section-holder {}
+
+/*** ARTISAN STYLING END */
+
+/* FOOTER STYLING */
+.footer-logo {
+  width: auto;
 }
 
 /**************************************
@@ -142,7 +409,7 @@ img {
 **************************************/
 @media screen and (min-width: 500px) {
   * {
-    --base-spacing: var(--large-spacing);
+    --base-spacing: 1rem;
     --large-spacing: var(--huge-spacing);
   }
 
@@ -150,5 +417,40 @@ img {
     max-width: 1600px;
     margin: auto;
     box-shadow: 0 0 10px var(--accent-1);
+    font-size: 18px;
+  }
+
+  .hero-title {
+    /* font-size: 2.5em; */
+    color: var(--color-text-light);
+    text-transform: capitalize;
+    text-align: center;
+    margin-top: 15%;
+  }
+
+  /* COLLECTION STYLING START */
+  .collectionHolder {
+    width: 450px;
+  }
+
+  /****************************
+  *** ARTISAN STYLING START ***
+  ****************************/
+  /* Artisan Card Styling */
+  .artisanHolder {
+    width: 450px;
+  }
+
+  /* COLLECTION STYLING START */
+  .productHolder {
+    width: 450px;
+  }
+
+  /******************************
+  *** DEVELOPER STYLING START ***
+  ******************************/
+  /* Developer Card Styling */
+  .devHolder {
+    width: 450px;
   }
 }

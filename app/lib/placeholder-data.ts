@@ -10,7 +10,7 @@ interface Image {
     source: string,
     alt: string,
     link?: ButtonLink,
-    description?: string 
+    description?: string
 }
 
 type ProductImage = {
@@ -151,6 +151,42 @@ const paintingCollection: CollectionItem = {
     about: `<b>Paintings</b><br>
             Colorful expressions that speak to the soul.<br>
             Explore original paintings created with mediums like watercolor, acrylic, oil, and mixed media — each stroke telling a unique story crafted by an artist’s hands.`,
+    products: [
+        {
+            id: "ecf00579-fb68-43e0-9cd5-ac5fa7a03593",
+            owner_id: "7b9b48d6-10ec-45dd-b36b-54710868d5d4",
+            name: "Pure Landscaped Winter Painting",
+            price: 30000,
+            product_images: [
+                {
+                    product_id: "ecf00579-fb68-43e0-9cd5-ac5fa7a03593",
+                    source: "/placeholders/product_images/painting.jpg",
+                    alt: "Painting of a pure landscaped winter"
+                },
+                {
+                    product_id: "ecf00579-fb68-43e0-9cd5-ac5fa7a03593",
+                    source: "/placeholders/product_images/painting-framed.png",
+                    alt: "Framed Painting of a pure landscaped winter"
+                },
+                {
+                    product_id: "ecf00579-fb68-43e0-9cd5-ac5fa7a03593",
+                    source: "/placeholders/product_images/painting-framed-in-living-room.png",
+                    alt: "Framed Painting of a pure landscaped winter in a living room"
+                }
+            ],
+            rating: {
+                likes: 0,
+                dislikes: 0,
+            },
+            comments: [],
+            description: `<i>Whispers of the Alpine Valley</i> is a breathtaking digital landscape masterpiece that blends serene beauty with storybook charm. Rendered in a vibrant, semi-realistic style, this artwork captures the tranquil majesty of a snow-dusted mountain range overlooking a peaceful lake, framed by evergreen forests and meadows dotted with wild red blooms.
+                            The towering peaks, cloaked in icy whites and deep shadows, command awe, while the mirrored reflection in the still waters below creates a soothing sense of symmetry and calm. Pine trees with bold, stylized forms rise from the rolling hillsides, drawing the viewer’s gaze into the lush depth of the valley. Splashes of sunlight and playful cloud formations add warmth and motion, suggesting a world untouched by time—inviting viewers to breathe, wander, and imagine.
+                            Whether displayed above a mantle, in a creative workspace, or as the centerpiece of a living room, <i>Whispers of the Alpine Valley</i> offers a daily escape into nature’s quiet grandeur. It’s a celebration of the wilderness—vivid, pure, and alive.
+                            <br><br>
+                            <b>Perfect for:</b> Nature lovers, digital art collectors, mountain adventurers, interior designers seeking a bold yet calming piece, and anyone drawn to tranquil landscapes with a magical twist.`,
+            collection_id: "0216fc0f-7ecc-4230-b986-4f176a509b26"
+        },
+    ]
 }
 
 const sculpureCollection: CollectionItem = {
@@ -292,16 +328,41 @@ export const artisans: Artisans = [
     {
         id: "7b9b48d6-10ec-45dd-b36b-54710868d5d4",
         display_name: "artistic giant",
-        about: `<b>About Artistic Giant</b><br><br>
-                    Welcome to the world of <b>Artistic Giant</b> — where imagination takes form, color finds purpose, and raw creativity is sculpted into timeless expressions. Artistic Giant is more than just an artisan name; it's a bold declaration of mastery in the visual arts, rooted in passion, precision, and storytelling.<br><br>
-                    With hands that sketch the unseen, paint with emotion, and mold life into stillness, Artistic Giant brings a powerful blend of <b>drawing</b>, <b>painting</b>, and <b>sculpture</b> to life. Each piece—whether on canvas, paper, or carved from clay—tells a story that speaks to the soul, inviting viewers into realms of thought, wonder, and beauty.<br><br>
-                    From detailed ink illustrations to vibrant acrylic paintings and expressive sculptural forms, Artistic Giant’s work bridges the traditional and the imaginative. Every creation is an exploration of mood, movement, and meaning—crafted to inspire, provoke, and endure.<br><br>
-                    Whether you're an art lover, collector, or creative collaborator, Artistic Giant welcomes you into a space where art is not just made—but felt.<br><br>
-                    <b>Art that stands tall. Vision that leaves a mark. Welcome to Artistic Giant.</b>`,
+        about: `Welcome to the world of <b>Artistic Giant</b> — where imagination takes form, color finds purpose, and raw creativity is sculpted into timeless expressions. Artistic Giant is more than just an artisan name; it's a bold declaration of mastery in the visual arts, rooted in passion, precision, and storytelling.<br><br>
+                With hands that sketch the unseen, paint with emotion, and mold life into stillness, Artistic Giant brings a powerful blend of <b>drawing</b>, <b>painting</b>, and <b>sculpture</b> to life. Each piece—whether on canvas, paper, or carved from clay—tells a story that speaks to the soul, inviting viewers into realms of thought, wonder, and beauty.<br><br>
+                From detailed ink illustrations to vibrant acrylic paintings and expressive sculptural forms, Artistic Giant’s work bridges the traditional and the imaginative. Every creation is an exploration of mood, movement, and meaning—crafted to inspire, provoke, and endure.<br><br>
+                Whether you're an art lover, collector, or creative collaborator, Artistic Giant welcomes you into a space where art is not just made—but felt.<br><br>
+                <b>Art that stands tall. Vision that leaves a mark. Welcome to Artistic Giant.</b>`,
         profile_photo: "",
         banner: "",
         gender: 'm',
         user_id: "2f5b0c63-f734-485a-8ef5-6a2c69470066"
+    },
+    {
+        id: "fa024314-9b48-4be0-a9e3-8d8a2e41e9cb",
+        display_name: "Mystic Thread",
+        about: `Welcome to the realm of <b>Mystic Thread</b> — where fiber meets fantasy, and every stitch whispers a story. Mystic Thread is more than a name; it's a tapestry of tradition and innovation woven with care, culture, and creativity.<br><br>
+                Through the rhythmic art of <b>textile weaving</b>, <b>embroidery</b>, and <b>fabric dyeing</b>, Mystic Thread breathes life into threads, turning raw materials into wearable art and decorative heirlooms. Whether it’s the meditative patterns of hand-woven cloth or the delicate intricacy of hand-stitched designs, each creation carries the energy of ancestral skill fused with modern soul.<br><br>
+                From flowing garments rich in meaning to vibrant wall hangings that sing with symbolism, Mystic Thread's work draws on heritage, mythology, and personal narrative. Every piece invites touch, reflection, and connection—stitched not just for the eye, but for the heart.<br><br>
+                Whether you're drawn to fashion, folklore, or fine craft, Mystic Thread welcomes you to a world where stories are sewn and beauty is bound by thread.<br><br>
+                <b>Woven with purpose. Embellished with spirit. This is Mystic Thread.</b>`,
+        profile_photo: "",
+        banner: "",
+        gender: 'f',
+        user_id: "4e16c70b-ea18-43f3-9e89-6a6f9af30c39"
+    },
+    {
+        id: "b68a5e7a-1291-4f1f-9fc3-3ed7e7c8fbd2",
+        display_name: "Echo Forge",
+        about: `Step into the vivid world of <b>Echo Forge</b> — where color carries memory, brushstrokes echo emotion, and canvas becomes a battleground of light and shadow. Echo Forge is more than a name; it’s a declaration of passion, resilience, and visual storytelling through the timeless craft of painting.<br><br>
+                Specializing in <b>oil</b>, <b>acrylic</b>, and <b>mixed media</b>, Echo Forge channels raw emotion into layered textures and bold compositions. Each painting strikes a balance between chaos and control—infused with movement, energy, and meaning. Whether abstract or representational, every piece is born from a place of reflection and fire.<br><br>
+                Inspired by urban grit, human expression, and elemental forces, Echo Forge’s work often features dynamic contrasts, metallic pigments, and intentional imperfections that draw viewers in. Each canvas becomes a mirror for the soul—capturing echoes of moments, thoughts, and truths.<br><br>
+                Whether you're a collector, gallery curator, or creative spirit, Echo Forge welcomes you to a studio where art is forged not in flames, but in feeling.<br><br>
+                <b>Bold color. Deep thought. Painted echoes that endure. Welcome to Echo Forge.</b>`,
+        profile_photo: "/artisans/generated-artisan-image.png",
+        banner: "",
+        gender: 'm',
+        user_id: "4e16c70b-ea18-43f3-9e89-6a6f9af30c39"
     },
 ]
 
@@ -338,3 +399,13 @@ export const users: Users = [
         access: "read-only"
     }
 ]
+
+
+/***********************
+*** PLACEHOLDER DATA ***
+***********************/
+export const placeholders = {
+    male_profile_picture: "/placeholders/male-profile-placeholder-image.png",
+    female_profile_picture: "/placeholders/female-profile-placeholder-image.png",
+    unisex_profile_picture: "/placeholders/default-avatar-profile-icon.png",
+}
