@@ -17,10 +17,10 @@ interface Image {
 }
 
 export type ProductImage = {
-    product_id: string;
+    product_id?: string;
     title?: string,
-    source: string,
-    alt: string,
+    source?: string,
+    alt?: string,
     link?: ButtonLink,
 }
 
@@ -32,24 +32,29 @@ export interface ButtonLink {
 export type HeroContent = Array<Image>
 
 interface CollectionItem {
-    id: string,
-    title: string,
-    about: string,
-    image: Image,
-    products?: Array<Product>,
+    id: string;
+    title: string;
+    about: string;
+    image: Image;
+    products: number;
 }
+export type Collections = Array<CollectionItem>;
 
 export type Product = {
     id: string;
     owner_id: string;
     name: string;
     price: number;
-    product_images: Array<ProductImage>;
-    rating: Rating;
-    comments: Array<UserComment>;
+    product_images?: Array<ProductImage>;
+    rating?: Rating;
+    likes?: number;
+    dislikes?: number;
+    comments?: Array<UserComment>;
     description: string;
     collection_id: string;
 }
+
+export type Products = Array<Product>;
 
 export type UserComment = {
     id: string,
@@ -71,6 +76,8 @@ export type Artisan = {
     profile_photo: string;
     banner: string;
     user_id: string;
+    artisan_collections?: { title?: string }[];
+    products?: number;
 }
 
 export type Artisans = Array<Artisan>
