@@ -64,8 +64,8 @@ async function seedArtisan() {
     const insertArtisans = await Promise.all(
         artisans.map(async (artisan) => {
             return sql`
-                INSERT INTO artisan (id, display_name, gender, about, user_id)
-                VALUES (${artisan.id}, ${artisan.display_name}, ${artisan.gender}, ${artisan.about}, ${artisan.user_id})
+                INSERT INTO artisan (id, display_name, gender, profile_photo, about, user_id)
+                VALUES (${artisan.id}, ${artisan.display_name}, ${artisan.gender}, ${artisan.profile_photo}, ${artisan.about}, ${artisan.user_id})
                 ON CONFLICT (id) DO NOTHING;
             `;
         })
