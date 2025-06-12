@@ -37,7 +37,7 @@ export const developers: Developers = [
             linkedin: 'https://www.linkedin.com/in/danielopute',
             twitter: 'https://x.com/DanielOpute',
             facebook: 'https://web.facebook.com/Daniel.C.Opute',
-            instagram: 'https://www.instagram.com/daniel.opute',
+            instagram: 'https://www.instagram.com/daniel.opute'
         }
     },
     {
@@ -48,7 +48,9 @@ export const developers: Developers = [
         about: "Gustavo Lima de Sousa is a passionate full stack web developer who blends technical precision with creative problem-solving. From dynamic front-end interfaces to robust back-end systems, he crafts seamless digital experiences. Dedicated to clean code, scalability, and user-focused design, Gustavo brings ideas to life across the web.",
         photo_url: "/developers/gustavo-lima-de-sousa.png",
         contact: {
-            linkedin: "https://www.linkedin.com/in/gustavolimadesousa"
+            email: "gustavolimadesousa@hotmail.com",
+            github: "https://github.com/gustavolimadesousa",
+            linkedin: "https://www.linkedin.com/in/gustavolimadesousa",
         }
     },
     {
@@ -59,7 +61,9 @@ export const developers: Developers = [
         about: "Lucas Mendonça de Souza is a skilled full stack web developer with a strong eye for detail and performance. He builds responsive front-end designs and powerful back-end solutions that work in harmony. Passionate about technology and innovation, Lucas transforms complex ideas into elegant, efficient web applications that deliver real impact.",
         photo_url: "/developers/lucas-mendonca-de-souza.png",
         contact: {
-            linkedin: "https://www.linkedin.com/in/lmsdevop"
+            email: "lsouza@byupathway.edu",
+            github: "https://github.com/lmspathway",
+            linkedin: "https://www.linkedin.com/in/lmsdevop",
         }
     },
 ]
