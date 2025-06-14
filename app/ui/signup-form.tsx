@@ -100,7 +100,7 @@ export default function SignUpForm() {
                             className="block text-xs font-medium text-gray-900"
                             style={{ marginTop: '0.5rem', marginBottom: '0.25rem' }}
                             htmlFor="username">
-                            Email
+                            Username
                         </label>
                         <div className="relative">
                             <input
@@ -153,7 +153,7 @@ export default function SignUpForm() {
                                 name="password"
                                 placeholder="Enter password"
                                 required
-                                minLength={6}
+                                minLength={5}
                             />
                             <KeyIcon className="pointer-events-none absolute left-3 top-1/2 h-[18px] w-[18px] -translate-y-1/2 text-gray-500" />
                         </div>

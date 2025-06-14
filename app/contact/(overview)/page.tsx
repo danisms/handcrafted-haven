@@ -4,7 +4,7 @@ import { Metadata } from "next";
 
 // Adding meta data to overide the parent layout metadata
 export const metadata: Metadata = {
-    title: 'Browers All Products',
+    title: 'Contact Us',
 };
 
 export default async function Page() {

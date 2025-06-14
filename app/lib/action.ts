@@ -1,6 +1,7 @@
 'use server';
 
 import { signIn } from '@/auth';
+import { AuthError } from 'next-auth';
 import { redirect } from 'next/navigation';
 import { createUser } from '@/app/lib/db';
 
@@ -8,17 +9,18 @@ export async function authenticate(
     _prevState: string | undefined,
     formData: FormData,
 ) {
-    const email = formData.get('email');
-    const password = formData.get('password');
-    const callbackUrl = formData.get('redirectTo')?.toString() || '/';
-
     try {
-        await signIn('credentials', {
-            redirectTo: callbackUrl,
-            redirect: true,
-        });
+        await signIn('credentials', formData);
     } catch (error) {
-        return 'Invalid email or password.';
+        if (error instanceof AuthError) {
+            switch (error.type) {
+                case 'CredentialsSignin':
+                    return 'Invalid credentials.';
+                default:
+                    return 'Something went wrong.';
+            }
+        }
+        throw error;
     }
 }
 

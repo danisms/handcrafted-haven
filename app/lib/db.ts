@@ -15,7 +15,7 @@ const FormSchema = z.object({
     user_photo: z.string().url('Invalid URL for user photo'),
     username: z.string().min(1, 'Username is required'),
     email: z.string().email('Invalid email address'),
-    password: z.string().min(6, 'Password must be at least 6 characters'),
+    password: z.string().min(5, 'Password must be at least 5 characters'),
     access: z.enum(['read-only', 'admin', 'full-control'], {
         errorMap: () => ({ message: 'Invalid access level' }),
     }),

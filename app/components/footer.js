@@ -81,3 +81,26 @@ export default function Footer() {
     </footer>
   );
 }
+
+export function SimpleFooter() {
+  return (
+    <footer className="bg-[#f7f1e3] text-[#4b3c2b]">
+      {/* Bottom Bar */}
+      <div className="bg-[#512e44] text-white text-sm py-4 px-15 flex flex-col md:flex-row justify-between items-center mx-auto">
+        <p className="text-center md:text-left">
+          Crafted by Hands, Cherished by Hearts.
+        </p>
+        <p className="text-center md:text-left">All Rights Reserved ©2025</p>
+
+        <div className="flex space-x-6 mt-2 md:mt-0">
+          <Link href="#" className="hover:underline">
+            Site Plan
+          </Link>
+          <Link href="#" className="hover:underline">
+            Site Map
+          </Link>
+        </div>
+      </div>
+    </footer>
+  );
+}

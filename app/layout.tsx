@@ -1,6 +1,7 @@
 import { playfair, cormorant, lato } from "./ui/fonts";
 import "@/app/ui/css/globals.css";
 import { Metadata } from "next";
+import { SessionProvider } from 'next-auth/react';
 
 // adding metadata
 export const metadata: Metadata = {
@@ -12,11 +13,13 @@ export const metadata: Metadata = {
   metadataBase: new URL('http://localhost:3000'),
 }
 
-export default function RootLayout({ children } : { children: React.ReactNode }) {
+export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
     <html lang="en" className={`${playfair.variable} ${cormorant.variable} ${lato.variable} antialiased`}>
       <body>
-        {children}
+        <SessionProvider>
+          {children}
+        </SessionProvider>
       </body>
     </html>
   );
