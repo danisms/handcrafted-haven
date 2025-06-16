@@ -140,6 +140,13 @@ button:hover {
   background-color: var(--color-hover);
 }
 
+.buttons-holder {
+  width: 100%;
+  padding: var(--base-spacing);
+  display: flex;
+  background: none;
+}
+
 
 img {
   width: 100%;
@@ -153,10 +160,97 @@ img {
   background-color: rgba(0, 0, 0, 0.25);
 }
 
+/* GENERAL FORM STYLING */
+form>div {
+  width: fit-content;
+  max-width: 500px;
+  margin: 0 auto;
+  margin-bottom: var(--large-spacing);
+  border: 1px solid var(--color-primary);
+  border-radius: 10px;
+  padding: var(--base-spacing);
+}
+
+form>div section {
+  margin: 0;
+}
+
+form>div input {
+  width: 100%;
+  border: 1px solid var(--color-primary);
+  outline: none;
+  font-size: 1em;
+}
+
+form>div input:focus,
+form>div textarea:focus {
+  border: 2px solid var(--color-accent);
+}
+
+form>div textarea {
+  width: 100%;
+  min-width: 250px;
+  min-height: 200px;
+  border: 1px solid var(--color-primary);
+  padding: var(--base-spacing);
+  border-radius: 5px;
+  outline: none;
+}
+
+form>div textarea:hover {
+  outline: none;
+}
+
+form>div input[type="radio"] {
+  display: inline-block;
+  width: fit-content;
+  border: 1px solid var(--color-text);
+  margin: 0 var(--base-spacing);
+}
+
+form>div input[type="radio"]:focus {
+  border: 2px solid var(--color-primary);
+}
+
+.radio-btn-text {
+  font-size: .9em;
+}
+
+.upload-btn,
+.submit-btn {
+  width: fit-content;
+  border-radius: 5px;
+  padding: 0.5rem;
+  background-color: var(--color-primary);
+  color: var(--color-text-light);
+  display: flex;
+  cursor: pointer;
+  align-items: center;
+  text-align: center;
+}
+
+.submit-btn {
+  margin: 0 auto;
+  min-width: 80%;
+  margin-top: var(--base-spacing);
+  display: block;
+  text-align: center;
+}
+
+.sub-submit-btn {
+  margin-top: 0;
+}
+
+.submit-btn>* {
+  display: inline-block;
+  width: fit-content;
+}
+
 /* HEADER STYLING */
 .nav-icon {
   width: 100%;
 }
+
 .log-header-holder {
   display: grid;
   grid-template-columns: 1fr 1fr;
@@ -171,6 +265,16 @@ img {
 }
 
 /* GENERAL STYLING */
+.display-empty {
+  width: 100%;
+  text-align: center;
+
+}
+
+.childMain {
+  min-height: 90vh;
+}
+
 .hero-section {
   width: 100%;
   max-height: 720px;
@@ -223,6 +327,12 @@ section {
   padding: var(--small-spacing);
   width: fit-content;
   height: fit-content;
+  margin-right: var(--base-spacing);
+  display: inline-block;
+}
+
+.cardTagsHolder {
+  width: 100%;
 }
 
 .contacts-holder {
@@ -274,6 +384,7 @@ section {
 /* Artisan Card Styling */
 .artisanHolder {
   width: 350px;
+  min-height: 420px;
   height: auto;
   border: 1px solid var(--color-primary);
   border-radius: 10px;
@@ -300,8 +411,11 @@ section {
   border-radius: 100%;
   border: 1px solid var(--color-primary);
   overflow: hidden;
+  display: block;
   justify-self: center;
   align-self: center;
+  align-content: center;
+  background-color: var(--color-contrast-accent);
 }
 
 .artisanDetailHolder h3 {
@@ -412,9 +526,19 @@ section {
   align-self: center;
 }
 
-.devDetailHolder .about-section-holder {}
 
-/*** ARTISAN STYLING END */
+/******************************
+**** PROFILE STYLING START ****
+******************************/
+.artisans-profiles-holder {
+  display: grid;
+  padding: var(--base-spacing);
+  gap: var(--base-spacing);
+  justify-items: center;
+  grid-template-columns: repeat(auto-fill, minmax(360px, 1fr));
+  background: none;
+}
+
 
 /* FOOTER STYLING */
 .footer-logo {
@@ -435,6 +559,11 @@ section {
     margin: auto;
     box-shadow: 0 0 10px var(--accent-1);
     font-size: 18px;
+  }
+
+  /* GENERAL FORM STYLING */
+  form>div {
+    min-width: 450px;
   }
 
   .hero-title {

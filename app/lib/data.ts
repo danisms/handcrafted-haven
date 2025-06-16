@@ -2,9 +2,11 @@ import postgres from "postgres";
 import { HeroContent, Collections, Artisans, Products } from "./definitions";
 import { formatCurrency } from "./utils";
 import { placeholders } from "./placeholder-data";
+import { auth } from "@/auth";
 
 const sql = postgres(process.env.POSTGRES_URL!, { ssl: 'require' });
 
+// HOME QUERIES
 export async function fetchHeroContent() {
     try {
         const data = await sql<HeroContent>`SELECT * FROM hero_content`;
@@ -75,5 +77,48 @@ export async function fetchMostRatedProducts() {
     } catch (error) {
         console.error('Database Error: ', error);
         throw new Error('Failded to fetch most reated products data.');
+    }
+}
+
+
+// PROFILE QUERIES
+export async function fetchMyArtisanProfiles() {
+    // note: artisans is fetched and sorted with the number of products attached to it in an decrementing order
+    try {
+        // get user id
+        const session = await auth();  // get session
+        const userId = session?.user?.id;
+
+        if (!userId) throw new Error('Unauthorized');
+
+        const data = await sql<Artisans>`SELECT artisan.* FROM artisan WHERE artisan.user_id = ${userId};`;
+        for (const result of data) {
+            // include placeholder profile photo when profile photo isn't available
+            const gender = result['gender'];
+            if (!result['profile_photo']) {
+                if (gender == "m") {
+                    result['profile_photo'] = placeholders.male_profile_picture;
+                } else {
+                    result['profile_photo'] = placeholders.female_profile_picture;
+                }
+            }
+
+            // include artisan collection titles to 
+            const artisan_id = result['id'];
+            const collectionLimit = 5;
+            const artisan_collections = await sql`SELECT collection.title FROM collection JOIN product ON collection.id = product.collection_id WHERE product.owner_id = ${artisan_id} LIMIT ${collectionLimit}`;
+            // console.log("ARTISAN COLLECTION: ", artisan_collections);  // for testing purpose
+            result['artisan_collections'] = artisan_collections;
+
+            // include artisan number of product
+            const artisan_no_of_products = await sql`SELECT COUNT(product.id) as no_of_products FROM product WHERE owner_id = ${artisan_id};`;
+            result['products'] = parseInt(artisan_no_of_products[0]['no_of_products']);
+            // console.log("PRODUCTS NUMBER: ", artisan_no_of_products);  // for debugging purpose
+        };
+
+        return data;
+    } catch (error) {
+        console.error('Database Error: ', error);
+        throw new Error('Failded to fetch collections data.');
     }
 }

@@ -394,7 +394,7 @@ export const users: Users = [
         firstname: "art",
         lastname: "user",
         user_photo: "",
-        email: "",
+        email: "user@mail.com",
         password: "admin",
         access: "read-only"
     }

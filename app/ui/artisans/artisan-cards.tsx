@@ -3,15 +3,15 @@ import Image from "next/image";
 import Link from "next/link";
 import { DOMPurify } from "dompurify";
 import { formatNumber, sliceText } from "@/app/lib/utils";
+import { Artisans } from "@/app/lib/definitions";
+import { fetchMyArtisanProfiles } from "@/app/lib/data";
+import DisplayEmpty from "../display-empty";
 
-export async function ArtisanCards() {
-    const topArtisans = await fetchTopArtisans();
-    console.log("TOP ARTISANS: ", topArtisans);  // for testing purpose
-
+export async function ArtisanCards(artisansData: Artisans, parentDirectory: string, editable: boolean = false) {
     return (
         <>
-            {topArtisans.map(artisan => (
-                <Link key={artisan.id} href={`/artisans/${artisan.id}`}>
+            {artisansData.map(artisan => (
+                <Link key={artisan.id} href={`/${parentDirectory}/${artisan.id}`} style={{ width: 'fit-content' }}>
                     <div className="artisanHolder">
                         <div className="artisanDetailHolder">
                             <div className="image-holder">
@@ -38,10 +38,44 @@ export async function ArtisanCards() {
                                 </section>
                             </div>
                         </div>
-                        <h3 className="cardTag">{artisan.display_name}</h3>
+                        <div className="cardTagsHolder">
+                            <h3 className="cardTag">{artisan.display_name}</h3>
+                            {editable ? (
+                                <>
+                                    <button onClick={null} className="cardTag cardBtn">Edit</button>
+                                    <button onClick={null} className="cardTag cardBtn">Delete</button>
+                                </>
+                            ) : null}
+                        </div>
                     </div>
-                </Link>
-            ))}
+                </Link >
+            ))
+            }
+        </>
+    );
+}
+
+export async function TopArtisans() {
+    const topArtisans = await fetchTopArtisans();
+    console.log("TOP ARTISANS: ", topArtisans);  // for testing purpose
+    // create cards for top artisans
+    if (topArtisans.length <= 0) return (<DisplayEmpty msg="NO TOP ARTISANS YET" />);
+    return ArtisanCards(topArtisans, 'artisans');
+}
+
+export async function MyArtisanProfiles() {
+    const myArtisanProfiles = await fetchMyArtisanProfiles();
+    console.log("MY ARTISAN PROFILES: ", myArtisanProfiles);
+
+    // check for empty
+    if (myArtisanProfiles.length <= 0) return <DisplayEmpty msg="ARTISAN PROFILE IS EMPTY" />;
+    // create cards
+    return (
+        <>
+            <h1 style={{ textAlign: "center" }}>MY ARTISAN PROFILES</h1>
+            <div className="artisans-profiles-holder">
+                {ArtisanCards(myArtisanProfiles, 'profile', true)}
+            </div>
         </>
     );
 }
