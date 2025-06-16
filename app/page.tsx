@@ -6,7 +6,7 @@ import { Suspense } from "react";
 import { CardSkeleton } from "./ui/skeletons";
 import HeroSection from "./ui/hero";
 import { CollectionCards } from "./ui/collections/collection-cards";
-import { ArtisanCards } from "./ui/artisans/artisan-cards";
+import { TopArtisans } from "./ui/artisans/artisan-cards";
 import { MostRatedProductCards } from "./ui/products/product-cards";
 import { DevelopersCard } from "./ui/developers/developer-cards";
 
@@ -41,7 +41,7 @@ export default function Page() {
           <h2>Top Artisans</h2>
           <div className='artisans-section slide-cards-container'>
             <Suspense fallback={<CardSkeleton />}>
-              <ArtisanCards />
+              <TopArtisans />
             </Suspense>
           </div>
         </section>

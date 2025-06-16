@@ -69,16 +69,25 @@ interface Rating {
 }
 
 export type Artisan = {
-    id: string;
-    display_name: string;
-    gender: "m" | "f";
-    about: string;
-    profile_photo: string;
-    banner: string;
-    user_id: string;
+    id?: string;
+    display_name?: string;
+    gender?: "m" | "f";
+    about?: string;
+    profile_photo?: string;
+    banner?: string;
+    user_id?: string;
     artisan_collections?: { title?: string }[];
     products?: number;
 }
+
+export type ArtisanFormState = {
+    success: boolean;
+    error?: string;
+    fieldErrors?: Record<string, string>;
+    message?: string;
+    warning?: string;
+    artisan?: Artisan;
+};
 
 export type Artisans = Array<Artisan>
 
@@ -94,3 +103,37 @@ export type User = {
 }
 
 // type Users = Array<User>;
+
+// FILE MIME TYPES
+export const fileMimeTypes = {
+    // general file formats
+    imageTypes: ['image/jpeg', 'image/jpg', 'image/png', 'image/webp', 'image/gif'],
+    videoTypes: ['video/mp4', 'video/mpeg', 'video/3gpp', 'video/webm'],
+    audioTypes: ['audio/mpeg', 'audio/wav', 'audio/ogg', 'audio/midi', 'audio/3gpp'],
+    docTypes: ['application/pdf', 'application/msword'],
+}
+
+// FILE SIZES
+export const fileSizes = {
+    // allowed file sizes
+    image: {
+        large_image_max_size: 5000000, // 5mb
+        medium_image_max_size: 3000000,  // 3mb
+        small_image_max_size: 1000000,  // 1mb
+    },
+    video: {
+        large_video_max_size: 25000000,  // 25mb
+        medium_video_max_size: 15000000,   // 15mb
+        small_video_max_size: 10000000,  // 10mb
+    },
+    audio: {
+        large_audio_max_size: 25000000,  // 25mb
+        medium_audio_max_size: 15000000,   // 15mb
+        small_audio_max_size: 10000000,  // 10mb
+    },
+    document: {
+        large_document_file_max_size: 10000000,  // 10mb
+        medium_document_file_max_size: 5000000,  // 5mb
+        small_document_file_max_size: 1000000,  // 1mb
+    }
+}
