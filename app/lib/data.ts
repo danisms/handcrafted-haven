@@ -2,7 +2,8 @@ import postgres from "postgres";
 import { HeroContent, Collections, Artisans, Products } from "./definitions";
 import { formatCurrency } from "./utils";
 import { placeholders } from "./placeholder-data";
-import { auth } from "@/auth";
+import { getSession } from "./auth";
+import { cache } from "react";
 
 const sql = postgres(process.env.POSTGRES_URL!, { ssl: 'require' });
 
@@ -82,16 +83,16 @@ export async function fetchMostRatedProducts() {
 
 
 // PROFILE QUERIES
-export async function fetchMyArtisanProfiles() {
+export const fetchMyArtisanProfiles = cache(async () => {
     // note: artisans is fetched and sorted with the number of products attached to it in an decrementing order
     try {
         // get user id
-        const session = await auth();  // get session
+        const session = await getSession();  // get session
         const userId = session?.user?.id;
 
         if (!userId) throw new Error('Unauthorized');
 
-        const data = await sql<Artisans>`SELECT artisan.* FROM artisan WHERE artisan.user_id = ${userId};`;
+        const data = await sql<Artisans>`SELECT artisan.* FROM artisan WHERE artisan.user_id = ${userId} ORDER BY artisan.created_at DESC;`;
         for (const result of data) {
             // include placeholder profile photo when profile photo isn't available
             const gender = result['gender'];
@@ -106,7 +107,7 @@ export async function fetchMyArtisanProfiles() {
             // include artisan collection titles to 
             const artisan_id = result['id'];
             const collectionLimit = 5;
-            const artisan_collections = await sql`SELECT collection.title FROM collection JOIN product ON collection.id = product.collection_id WHERE product.owner_id = ${artisan_id} LIMIT ${collectionLimit}`;
+            const artisan_collections = await sql`SELECT collection.title FROM collection JOIN product ON collection.id = product.collection_id WHERE product.owner_id = ${artisan_id} LIMIT ${collectionLimit};`;
             // console.log("ARTISAN COLLECTION: ", artisan_collections);  // for testing purpose
             result['artisan_collections'] = artisan_collections;
 
@@ -121,4 +122,4 @@ export async function fetchMyArtisanProfiles() {
         console.error('Database Error: ', error);
         throw new Error('Failded to fetch collections data.');
     }
-}
+});

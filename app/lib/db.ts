@@ -209,7 +209,10 @@ export async function createArtisan(_prevState: any, formData: FormData) {
         // Return error in a format that useActionState can handle
         return {
             error: error instanceof Error ? error.message : 'Failed to create artisan profile',
-            success: false
+            success: false,
+            warning: null,
+            message: null,
+            artisan: null
         };
     }
 }

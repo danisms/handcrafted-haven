@@ -92,14 +92,14 @@ export type ArtisanFormState = {
 export type Artisans = Array<Artisan>
 
 export type User = {
-    id: string;
+    id?: string;
     firstname: string;
     lastname: string;
-    user_photo: string;
+    user_photo?: string;
     username: string;
     email: string;
-    password: string;
-    access: "read-only" | "admin" | "full-control"
+    password?: string;
+    access?: "read-only" | "admin" | "full-control"
 }
 
 // type Users = Array<User>;

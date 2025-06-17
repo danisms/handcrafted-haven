@@ -302,7 +302,7 @@ form>div input[type="radio"]:focus {
   text-align: center;
 }
 
-section {
+main section {
   margin-top: var(--large-spacing);
   padding: var(--base-spacing);
 }
@@ -332,7 +332,9 @@ section {
 }
 
 .cardTagsHolder {
-  width: 100%;
+  width: fit-content;
+  height: fit-content;
+  display: flex;
 }
 
 .contacts-holder {
@@ -398,6 +400,7 @@ section {
 }
 
 .artisanDetailHolder {
+  height: 100%;
   margin: var(--small-spacing);
   padding: var(--base-spacing);
   display: grid;

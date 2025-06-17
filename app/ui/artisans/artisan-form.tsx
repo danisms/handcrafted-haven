@@ -8,8 +8,9 @@ import { SpinnerIcon } from '../component/icons';
 import { ArrowRightIcon } from '@heroicons/react/20/solid';
 import { useActionState, useState } from 'react';
 import { registerArtisan } from '@/app/lib/action';
-import { useSearchParams } from 'next/navigation';
-import { Artisan, ArtisanFormState } from '@/app/lib/definitions';
+import { redirect, useSearchParams } from 'next/navigation';
+import { ArtisanFormState } from '@/app/lib/definitions';
+import { toast } from 'sonner';
 
 
 export function CreateArtisanForm() {
@@ -26,7 +27,7 @@ export function CreateArtisanForm() {
     const [fileErrors, setFileErrors] = useState<Record<string, string>>({});
 
     // Combine server and client side errors
- 
+
     const allFieldErrors = {
         ...formErrors,
         ...(state.fieldErrors || {})
@@ -36,6 +37,18 @@ export function CreateArtisanForm() {
         ...fileErrors,
         ...(state.fieldErrors || {})
     };
+
+    // redirect with state
+    if (state.success) {
+        toast.success(state.message);
+        setTimeout(() => { redirect("/profile/") }, 1000)
+    } else if (state.warning) {
+        toast.warning(state.warning);
+    } else if (state.error) {
+        toast.error(state.error);
+    } else {
+        // do nothing.
+    }
 
     // Rest of your JSX remains the same...
     return (

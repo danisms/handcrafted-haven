@@ -4,7 +4,12 @@ import { signIn } from '@/auth';
 import { AuthError } from 'next-auth';
 import { redirect } from 'next/navigation';
 import { createArtisan, createUser } from '@/app/lib/db';
-import { Artisan, ArtisanFormState, User } from './definitions';
+import { ArtisanFormState, User } from './definitions';
+import { revalidatePath } from 'next/cache';
+import postgres from 'postgres';
+import { DELETEFILE } from './utils';
+
+const sql = postgres(process.env.POSTGRES_URL!, { ssl: 'require' });
 
 export async function authenticate(
     _prevState: string | undefined,
@@ -26,7 +31,7 @@ export async function authenticate(
 }
 
 export async function register(
-    _prevState: User | undefined,
+    _prevState: undefined,
     formData: FormData
 ) {
 
@@ -145,5 +150,51 @@ export async function registerArtisan(
         }
 
         return { error: 'An unexpected error occurred', success: false };
+    }
+}
+
+export async function deleteArtisan(id: string) {
+    // 1. Fetch all file paths before deletion
+    const files = await sql`
+        -- Artisan's files
+        SELECT profile_photo AS path FROM artisan WHERE id = ${id} AND profile_photo IS NOT NULL
+        UNION ALL
+        SELECT banner AS path FROM artisan WHERE id = ${id} AND banner IS NOT NULL
+        
+        -- Product images
+        UNION ALL
+        SELECT pi.source AS path
+        FROM product_image pi
+        JOIN product p ON pi.product_id = p.id
+        WHERE p.owner_id = ${id} AND pi.source IS NOT NULL
+    `;
+
+    // Delete files from storage
+    let allFilesDeleted = true;
+    const totalFiles = files.length;
+    let totalDeleted = 0;
+
+    console.log("FILES: ", files, "\nTotal Files: ", totalFiles);  // for debugging purpose
+
+    for (const file of files) {
+        const deleteReport = await DELETEFILE(file.path);
+        if (!deleteReport.success) {
+            allFilesDeleted = false;
+        } else {
+            totalDeleted++;
+        }
+    }
+
+    console.log("Total Files: ", totalFiles, "; Total Deleted: ", totalDeleted, "; All Files Deleted: ", allFilesDeleted);  // for debugging purpose
+
+    if (allFilesDeleted) {
+        // Delete database records (cascading will handle linked tables)
+        await sql`DELETE FROM artisan WHERE artisan.id = ${id}`;
+
+        // Revalidate path (i.e reload data in path)
+        revalidatePath("/profile/");
+        return { sucess: true, message: "Artisan Deleted Successfully", error: null };
+    } else {
+        return { sucess: false, message: "Error Deleteing Artisan", error: `Fail to delete some files. Total Files: ${totalFiles}; Total Deleted: ${totalDeleted}` };
     }
 }

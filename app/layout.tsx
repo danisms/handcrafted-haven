@@ -2,6 +2,7 @@ import { playfair, cormorant, lato } from "./ui/fonts";
 import "@/app/ui/css/globals.css";
 import { Metadata } from "next";
 import { SessionProvider } from 'next-auth/react';
+import { Toaster } from "sonner";
 
 // adding metadata
 export const metadata: Metadata = {
@@ -19,6 +20,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
       <body>
         <SessionProvider>
           {children}
+          <Toaster position="bottom-right" />
         </SessionProvider>
       </body>
     </html>

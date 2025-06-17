@@ -17,6 +17,7 @@ import { useSearchParams } from 'next/navigation';
 export default function SignUpForm() {
     const searchParams = useSearchParams();
     const callbackUrl = searchParams.get('callbackUrl') || '/';
+    
     const [errorMessage, formAction, isPending] = useActionState(register, undefined);
 
     return (

@@ -1,3 +1,5 @@
+export const dynamic = 'force-dynamic';
+
 import { Metadata } from "next";
 import Header from "@/app/components/header";
 import { SimpleFooter } from "@/app/components/footer";
