@@ -3,11 +3,11 @@
 import { signIn } from '@/auth';
 import { AuthError } from 'next-auth';
 import { redirect } from 'next/navigation';
-import { createArtisan, createUser } from '@/app/lib/db';
+import { createArtisan, createUser, updateArtisanData } from '@/app/lib/db';
 import { ArtisanFormState, User } from './definitions';
 import { revalidatePath } from 'next/cache';
 import postgres from 'postgres';
-import { DELETEFILE } from './utils';
+import { DELETEFILE } from './handleFile';
 
 const sql = postgres(process.env.POSTGRES_URL!, { ssl: 'require' });
 
@@ -153,6 +153,123 @@ export async function registerArtisan(
     }
 }
 
+export async function updateArtisan(
+    _prevState: ArtisanFormState,
+    formData: FormData
+) {
+    try {
+        // Extract and validate required fields
+        const display_name = formData.get('title')?.toString()?.trim();
+        const about = formData.get('about')?.toString()?.trim();
+        const gender = formData.get('gender')?.toString();
+
+        // Validate required fields with specific error messages
+        const fieldErrors: Record<string, string> = {};
+        if (!display_name) fieldErrors.title = 'Artisan title is required';
+        if (!about) fieldErrors.about = 'About section is required';
+        if (!gender) fieldErrors.gender = 'Gender selection is required';
+
+        if (Object.keys(fieldErrors).length > 0) {
+            return {
+                error: 'Please fix the following errors',
+                fieldErrors,
+                success: false
+            };
+        }
+
+        // Validate files (make them optional if needed)
+        const profilePhoto = formData.get('profile_photo') as File | null;
+        const banner = formData.get('profile_banner') as File | null;
+
+        // FOR FILES
+        const fileErrors: Record<string, string> = {};
+        // // If files are required:
+        // if (!profilePhoto || profilePhoto.size === 0) {
+        //     fileErrors.profile_photo = 'Profile photo is required';
+        // }
+        // if (!banner || banner.size === 0) {
+        //     fileErrors.profile_banner = 'Banner image is required';
+        // }
+
+        if (Object.keys(fileErrors).length > 0) {
+            return {
+                error: 'Please fix the following file errors',
+                fieldErrors: fileErrors,
+                success: false
+            };
+        }
+
+        // Process the form
+        const result = await updateArtisanData(_prevState, formData);
+
+        // Handle different response cases
+        if (!result.success) {
+            // If createArtisan returned an error
+            return {
+                error: result.error || 'Failed to create artisan profile',
+                success: false
+            };
+        }
+
+        // Handle partial success (profile created but file upload issues)
+        if (result.warning) {
+            return {
+                success: true,
+                artisan: result.artisan,
+                message: result.message,
+                warning: result.warning
+            };
+        }
+
+        // Full success case
+        return {
+            success: true,
+            artisan: result.artisan,
+            message: result.message || 'Artisan profile created successfully'
+        };
+
+    } catch (err) {
+        console.error("CREATE ARTISAN ERROR:", err);
+
+        // Handle different error types
+        if (err instanceof Error) {
+            // Check if it's a database or validation error
+            if (err.message.includes('unique constraint')) {
+                return {
+                    error: 'This artisan name is already taken',
+                    fieldErrors: { title: 'Please choose a different name' },
+                    success: false
+                };
+            }
+            return { error: err.message, success: false };
+        }
+
+        return { error: 'An unexpected error occurred', success: false };
+    }
+}
+
+export async function deleteArtisanPhoto(id: string, photo_url: string) {
+    // Delete files from storage
+    const deleteReport = await DELETEFILE(photo_url);
+    if (deleteReport.success) {
+        await sql`UPDATE artisan SET profile_photo = NULL WHERE id = ${id} AND profile_photo = ${photo_url};`;
+        return { sucess: true, message: "Profile Photo Deleted Successfully", error: null };
+    } else {
+        return { sucess: false, message: "Error Deleting File", error: `Fail to delete file.` };
+    }
+}
+
+export async function deleteArtisanBanner(id: string, photo_url: string) {
+    // Delete files from storage
+    const deleteReport = await DELETEFILE(photo_url);
+    if (deleteReport.success) {
+        await sql`UPDATE artisan SET banner = NULL WHERE id = ${id} AND banner = ${photo_url};`;
+        return { sucess: true, message: "Profile Banner Deleted Successfully", error: null };
+    } else {
+        return { sucess: false, message: "Error Deleting File", error: `Fail to delete file.` };
+    }
+}
+
 export async function deleteArtisan(id: string) {
     // 1. Fetch all file paths before deletion
     const files = await sql`
@@ -195,6 +312,6 @@ export async function deleteArtisan(id: string) {
         revalidatePath("/profile/");
         return { sucess: true, message: "Artisan Deleted Successfully", error: null };
     } else {
-        return { sucess: false, message: "Error Deleteing Artisan", error: `Fail to delete some files. Total Files: ${totalFiles}; Total Deleted: ${totalDeleted}` };
+        return { sucess: false, message: "Error Deleting Artisan", error: `Fail to delete some files. Total Files: ${totalFiles}; Total Deleted: ${totalDeleted}` };
     }
 }

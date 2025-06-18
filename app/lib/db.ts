@@ -6,7 +6,7 @@ import { redirect } from 'next/navigation';
 import { Artisan, fileMimeTypes, fileSizes, User } from '@/app/lib/definitions';
 import { z } from 'zod';
 import { getSession } from './auth';
-import { UPLOADFILE } from './utils';
+import { DELETEFILE, UPLOADFILE } from './handleFile';
 
 const sql = postgres(process.env.POSTGRES_URL!, { ssl: 'require' });
 
@@ -97,7 +97,7 @@ export async function createArtisan(_prevState: any, formData: FormData) {
         }
 
         const { display_name, about, gender } = validatedData.data;
-        
+
         // Get user session
         const session = await getSession();
         if (!session) {
@@ -110,7 +110,7 @@ export async function createArtisan(_prevState: any, formData: FormData) {
         const display_name_exist = await sql`
             SELECT display_name FROM artisan WHERE display_name = ${display_name}
         `;
-        
+
         if (display_name_exist.length > 0) {
             throw new Error("This title is already taken. Please choose a different one.");
         }
@@ -137,10 +137,10 @@ export async function createArtisan(_prevState: any, formData: FormData) {
             try {
                 const artisan_profile_photo_path = `artisans/${artisan_id}/profile-photo`;
                 const uploadResult = await UPLOADFILE(
-                    formData, 
-                    'profile_photo', 
-                    artisan_profile_photo_path, 
-                    fileMimeTypes.imageTypes, 
+                    formData,
+                    'profile_photo',
+                    artisan_profile_photo_path,
+                    fileMimeTypes.imageTypes,
                     fileSizes.image.medium_image_max_size
                 );
 
@@ -167,10 +167,10 @@ export async function createArtisan(_prevState: any, formData: FormData) {
             try {
                 const artisan_profile_banner_path = `artisans/${artisan_id}/banner`;
                 const uploadResult = await UPLOADFILE(
-                    formData, 
-                    'profile_banner', 
-                    artisan_profile_banner_path, 
-                    fileMimeTypes.imageTypes, 
+                    formData,
+                    'profile_banner',
+                    artisan_profile_banner_path,
+                    fileMimeTypes.imageTypes,
                     fileSizes.image.medium_image_max_size
                 );
 
@@ -197,18 +197,195 @@ export async function createArtisan(_prevState: any, formData: FormData) {
         return {
             artisan: result[0],
             message: successMessages.join('\n'),
-            ...(hasFileUploadError && { 
-                warning: "Profile created but some files failed to upload:\n" + fileUploadError 
+            ...(hasFileUploadError && {
+                warning: "Profile created but some files failed to upload:\n" + fileUploadError
             }),
             success: true
         };
 
     } catch (error) {
         console.error('Error creating artisan:', error);
-        
+
         // Return error in a format that useActionState can handle
         return {
             error: error instanceof Error ? error.message : 'Failed to create artisan profile',
+            success: false,
+            warning: null,
+            message: null,
+            artisan: null
+        };
+    }
+}
+
+export async function updateArtisanData(_prevState: any, formData: FormData) {
+    try {
+        // Validate input data
+        const validatedData = ArtisanFormSchema.safeParse({
+            id: formData.get('id')?.toString(),
+            display_name: formData.get('title')?.toString().toLowerCase(),
+            about: formData.get('about')?.toString(),
+            gender: formData.get('gender')?.toString().toLowerCase(),
+        });
+
+        if (!validatedData.success) {
+            const errorMessages = Object.entries(validatedData.error.flatten().fieldErrors)
+                .map(([field, errors]) => `${field}: ${errors?.join(', ')}`)
+                .join('\n');
+            throw new Error(errorMessages);
+        }
+
+        const { id, display_name, about, gender } = validatedData.data;
+
+        // Get user session
+        const session = await getSession();
+        if (!session) {
+            throw new Error("Unauthorized: Please log in to update artisan profile");
+        }
+
+        const user_id = session.user.id;
+
+        // Check if display_name already exists
+        const display_name_exist = await sql`
+            SELECT display_name FROM artisan WHERE display_name = ${display_name} AND id != ${id} AND user_id != ${user_id};
+        `;
+
+        if (display_name_exist.length > 0) {
+            throw new Error("This title is already taken. Please choose a different one.");
+        }
+
+        // Update artisan record
+        const result = await sql`
+            UPDATE artisan SET display_name = ${display_name}, about = ${about}, gender = ${gender}
+            wHERE id = ${id} AND user_id = ${user_id}
+            RETURNING id, display_name, about, gender;
+        `;
+
+        if (result.length === 0) {
+            throw new Error("Failed to update artisan profile");
+        }
+
+        const artisan_id = result[0].id || id;
+        const successMessages: string[] = ["Artisan profile updated successfully"];
+        let hasFileUploadError = false;
+        let fileUploadError = "";
+
+        // get current profile photo and banner
+        const artisanPhotoAndBannerResult = await sql`SELECT profile_photo, banner FROM artisan WHERE id=${artisan_id} AND user_id=${user_id};`;
+        const artisanPhotoAndBanner: Artisan = artisanPhotoAndBannerResult[0];
+        const currentPhoto = artisanPhotoAndBanner.profile_photo;
+        const currentBanner = artisanPhotoAndBanner.banner;
+
+        // Handle profile photo upload
+        const profilePhoto = formData.get('profile_photo') as File;
+        if (profilePhoto && profilePhoto.size > 0) {
+            try {
+                const artisan_profile_photo_path = `artisans/${artisan_id}/profile-photo`;
+                // check and delete previous file before uploading
+                let procceedToUpdate = false;
+                if (currentPhoto) {
+                    const deleteResult = await DELETEFILE(currentPhoto);
+                    if (deleteResult.success) {
+                        procceedToUpdate = true;
+                    } else {
+                        hasFileUploadError = true;
+                        fileUploadError += `Profile photo: ${deleteResult.error}\n`;
+                    }
+                } else {
+                    procceedToUpdate = true;
+                }
+                // check and update photo
+                if (procceedToUpdate) {
+                    const uploadResult = await UPLOADFILE(
+                        formData,
+                        'profile_photo',
+                        artisan_profile_photo_path,
+                        fileMimeTypes.imageTypes,
+                        fileSizes.image.medium_image_max_size
+                    );
+
+                    if (uploadResult.success) {
+                        await sql`
+                        UPDATE artisan 
+                        SET profile_photo = ${uploadResult.url} 
+                        WHERE id = ${artisan_id} AND user_id = ${user_id}
+                    `;
+                        successMessages.push("Profile photo updated successfully");
+                    } else {
+                        hasFileUploadError = true;
+                        fileUploadError += `Profile photo: ${uploadResult.error}\n`;
+                    }
+                }
+            } catch (error) {
+                hasFileUploadError = true;
+                fileUploadError += `Profile photo: ${error instanceof Error ? error.message : 'Upload failed'}\n`;
+            }
+        }
+
+        // Handle banner upload
+        const banner = formData.get('profile_banner') as File;
+        if (banner && banner.size > 0) {
+            try {
+                const artisan_profile_banner_path = `artisans/${artisan_id}/banner`;
+                // check and delete previous file before uploading
+                let proceedToUpdate = false;
+                if (currentBanner) {
+                    const deleteResult = await DELETEFILE(currentBanner);
+                    if (deleteResult.success) {
+                        proceedToUpdate = true;
+                    } else {
+                        hasFileUploadError = true;
+                        fileUploadError += `Profile banner: ${deleteResult.error}\n`;
+                    }
+                } else {
+                    proceedToUpdate = true;
+                }
+
+                // check and update file
+                if (proceedToUpdate) {
+                    const uploadResult = await UPLOADFILE(
+                        formData,
+                        'profile_banner',
+                        artisan_profile_banner_path,
+                        fileMimeTypes.imageTypes,
+                        fileSizes.image.medium_image_max_size
+                    );
+
+                    if (uploadResult.success) {
+                        await sql`
+                        UPDATE artisan 
+                        SET banner = ${uploadResult.url} 
+                        WHERE id = ${artisan_id} AND user_id = ${user_id}
+                    `;
+                        successMessages.push("Profile banner updated successfully");
+                    } else {
+                        hasFileUploadError = true;
+                        fileUploadError += `Profile banner: ${uploadResult.error}\n`;
+                    }
+                }
+            } catch (error) {
+                hasFileUploadError = true;
+                fileUploadError += `Profile banner: ${error instanceof Error ? error.message : 'Upload failed'}\n`;
+            }
+        }
+
+        // Revalidate path and return result
+        revalidatePath('/profile');
+
+        return {
+            artisan: result[0],
+            message: successMessages.join('\n'),
+            ...(hasFileUploadError && {
+                warning: "Profile updated but some files failed to upload:\n" + fileUploadError
+            }),
+            success: true
+        };
+
+    } catch (error) {
+        console.error('Error updating artisan:', error);
+
+        // Return error in a format that useActionState can handle
+        return {
+            error: error instanceof Error ? error.message : 'Failed to update artisan profile',
             success: false,
             warning: null,
             message: null,

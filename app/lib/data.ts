@@ -1,5 +1,5 @@
 import postgres from "postgres";
-import { HeroContent, Collections, Artisans, Products } from "./definitions";
+import { HeroContent, Collections, Artisans, Products, Artisan } from "./definitions";
 import { formatCurrency } from "./utils";
 import { placeholders } from "./placeholder-data";
 import { getSession } from "./auth";
@@ -123,3 +123,9 @@ export const fetchMyArtisanProfiles = cache(async () => {
         throw new Error('Failded to fetch collections data.');
     }
 });
+
+export async function fetchArtisanById(id: string) {
+    const data = await sql`SELECT * FROM artisan WHERE id = ${id}`;
+    const artisan: Artisan = data[0];
+    return artisan;
+}
