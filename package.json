@@ -30,6 +30,7 @@
     "bcryptjs": "^3.0.2",
     "clsx": "2.1.1",
     "dompurify": "^3.2.6",
+    "framer-motion": "^12.18.1",
     "next": "15.3.2",
     "next-auth": "^5.0.0-beta.25",
     "postgres": "^3.4.7",
@@ -46,6 +47,7 @@
     "@types/react": "^19.1.6",
     "eslint": "^9",
     "eslint-config-next": "15.3.2",
+    "prisma": "^6.10.1",
     "tailwindcss": "^4"
   }
 }
