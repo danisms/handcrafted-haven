@@ -9,12 +9,13 @@ import Image from 'next/image';
 import { placeholders } from '@/app/lib/placeholder-data';
 import { DisplayComments } from '../component/bread-crumbs';
 import { AddProductComment } from './product-forms';
+import { LikeDislikeProductButtons } from './buttons';
 
 export function ProductDetail({ product_data }: { product_data: Product }) {
     const productImages = product_data.product_images;
     const artisanData = product_data.owner;
-    artisanData.profile_photo = artisanData.profile_photo || artisanData.gender == 'm' ? placeholders.male_profile_picture : placeholders.female_profile_picture;
-    artisanData.about = artisanData.about || `Artisan does not have anything about ${artisanData.gender == 'm' ? 'him' : 'her'} yet.`;
+    artisanData.profile_photo = artisanData?.profile_photo || artisanData.gender == 'm' ? placeholders.male_profile_picture : placeholders.female_profile_picture;
+    artisanData.about = artisanData?.about || `Artisan does not have anything about ${artisanData.gender == 'm' ? 'him' : 'her'} yet.`;
 
     const [selectedIndex, setSelectedIndex] = useState<number>(0);
 
@@ -37,8 +38,7 @@ export function ProductDetail({ product_data }: { product_data: Product }) {
             <div className="product-interactive-buttons-holder">
                 <button className="buy-product-btn">BUY</button>
                 <div className="rating-buttons-holder">
-                    <button className="rating-btn"><ThumbsUp color="green" /> {formatNumber(product_data.rating.likes)}</button>
-                    <button className="rating-btn"><ThumbsDown color="red" /> {formatNumber(product_data.rating.dislikes)}</button>
+                    <LikeDislikeProductButtons product_data={product_data} />
                     <a href="#view-comments"><button className="rating-btn"><MessageSquare /> {formatNumber(product_data.comments.length)}</button></a>
                 </div>
             </div>

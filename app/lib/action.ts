@@ -9,6 +9,7 @@ import { revalidatePath } from 'next/cache';
 import postgres from 'postgres';
 import { DELETEFILE } from './handleFile';
 import { getSession } from './auth';
+import { toast } from 'sonner';
 
 const sql = postgres(process.env.POSTGRES_URL!, { ssl: 'require' });
 
@@ -648,5 +649,49 @@ export async function addProductComment(
         }
 
         return { error: 'An unexpected error occurred', success: false };
+    }
+}
+
+export async function updateRating(product_id: string, rating: string | null) {
+    // check login state
+    const session = await getSession();
+
+    if (!session) {
+        const report = { success: false, message: "You are not logged in. Login to rate product" };
+        // toast.warning(report.message);
+        return report;
+    }
+
+    const user_id = session.user.id;
+    const check_rating = await sql`SELECT rate FROM product_rating WHERE product_id = ${product_id} AND user_id = ${user_id};`;
+    if (check_rating.length > 0) {
+        // update rating
+        const rating_result = await sql`UPDATE product_rating SET rate = ${rating} WHERE product_id = ${product_id} AND user_id = ${user_id}
+        RETURNING id;`;
+
+        if (rating_result.length === 0) {
+            const report = { success: true, message: "Thanks for the rating!" };
+            // toast.success(report.message);
+            return report;
+        } else {
+            const report = { success: false, message: "There was an error updating your rating. Please try again." };
+            // toast.error(report.message);
+            return report;
+        }
+    } else {
+        // insert rating
+        const rating_result = await sql`INSERT INTO product_rating (product_id, user_id, rate) 
+        VALUES (${product_id}, ${user_id}, ${rating})
+        RETURNING id;`;
+
+        if (rating_result.length === 0) {
+            const report = { success: true, message: "Thanks for the rating!" };
+            // toast.success(report.message);
+            return report;
+        } else {
+            const report = { success: false, message: "There was an error updating your rating. Please try again." };
+            // toast.error(report.message);
+            return report;
+        }
     }
 }

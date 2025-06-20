@@ -48,6 +48,7 @@ export type Product = {
     product_images?: Array<ProductImage>;
     rating?: Rating;
     likes?: number;
+    my_rating?: string;
     dislikes?: number;
     comments?: Array<UserComment>;
     description: string;

@@ -210,9 +210,15 @@ export const fetchArtisanProductById = cache(async (artisanId: string, productId
         product['rating'] = rating;
         product['likes'] = rating.likes;
         product['dislikes'] = rating.dislikes;
+        const session = await getSession();
+        if (session.user) {
+            const user_id = session.user.id;
+            const my_rate = await sql`SELECT rate FROM product_rating WHERE product_id = ${product_id} AND user_id = ${user_id}`;
+            product['my_rating'] = my_rate[0]['rate'];
+        }
         // get and add product comments
         const comments = await sql<UserComment[]>`SELECT product_comment.id, product_comment.parent_id, product_comment.comments, product_comment.product_id, CONCAT(users.firstname, ' ', users.lastname) AS name, users.user_photo FROM product_comment JOIN users ON product_comment.user_id = users.id WHERE product_comment.product_id = ${product_id};`;
-        
+
         product['comments'] = comments;
 
         // add artisan to product as owner
