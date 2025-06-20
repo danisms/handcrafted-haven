@@ -1,4 +1,5 @@
 import { ProductImage } from "@/app/lib/definitions";
+import Image from "next/image";
 
 type Props = {
     images: ProductImage[];
@@ -10,7 +11,7 @@ export default function ThumbnailList({ images, selectedIndex, setSelectedIndex 
     return (
         <div className="flex gap-4 mt-4 gallery-thumbnails-holder">
             {images.map((image, index) => (
-                <img
+                <Image
                     key={index}
                     src={image.source}
                     alt={`Thumbnail ${index}`}

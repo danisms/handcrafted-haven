@@ -1,6 +1,7 @@
 import { ProductImage } from '@/app/lib/definitions';
 import ThumbnailList from './thumbnail-list';
 import { FaChevronLeft, FaChevronRight } from 'react-icons/fa';
+import Image from 'next/image';
 
 type Props = {
     images: ProductImage[];
@@ -23,7 +24,7 @@ export function ImageGallery({ images, selectedIndex, setSelectedIndex }: Props)
                     <FaChevronLeft size={32} />
                 </button>
 
-                <img
+                <Image
                     src={images[selectedIndex].source}
                     alt={`Main Image ${selectedIndex}`}
                     className="rounded-lg w-full max-h-[400px] object-contain"

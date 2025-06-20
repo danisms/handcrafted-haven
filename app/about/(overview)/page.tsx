@@ -32,20 +32,20 @@ export default function Page() {
             {/* Text */}
             <div className="w-full lg:w-1/2 p-6 text-gray-700 text-lg leading-relaxed">
               <p className="mb-6">
-                Welcome to our platform! We're a team of passionate creators
+                {`Welcome to our platform! We're a team of passionate creators
                 committed to building high-quality handcrafted digital
-                experiences.
+                experiences.`}
               </p>
               <p className="mb-6">
-                Our mission is to connect makers and buyers in a vibrant,
+                {`Our mission is to connect makers and buyers in a vibrant,
                 inspiring community. Whether you're here to discover unique
                 products or to share your own creations, we're glad you're part
-                of our journey.
+                of our journey.`}
               </p>
               <p>
-                This project is built with Next.js, Tailwind CSS, and a deep
+                {`This project is built with Next.js, Tailwind CSS, and a deep
                 appreciation for design that is both functional and beautiful.
-                Thank you for visiting!
+                Thank you for visiting!`}
               </p>
             </div>
           </div>

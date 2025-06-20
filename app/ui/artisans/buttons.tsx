@@ -81,7 +81,7 @@ export function DeleteArtisanPhoto({ id, photo_url }: { id: string, photo_url: s
         return () => {
             button.removeEventListener('click', handleClick);
         }
-    }, [isDeleted]); // Add isDeleted to dependencies
+    }, [isDeleted, id, photo_url]); // Add isDeleted to dependencies
 
     if (isDeleted) {
         return null; // Don't render anything if deleted
@@ -122,7 +122,7 @@ export function DeleteArtisanBanner({ id, photo_url }: { id: string, photo_url: 
         return () => {
             button.removeEventListener('click', handleClick);
         }
-    }, [isDeleted]); // Add isDeleted to dependency array
+    }, [isDeleted, id, photo_url]); // Add isDeleted to dependency array
 
     if (isDeleted) {
         return null; // Return nothing if deleted
