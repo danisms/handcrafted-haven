@@ -52,18 +52,35 @@ export type Product = {
     comments?: Array<UserComment>;
     description: string;
     collection_id: string;
+    owner?: Artisan;
 }
 
 export type Products = Array<Product>;
 
+export type ProductFormState = {
+    success: boolean;
+    error?: string;
+    fieldErrors?: Record<string, string>;
+    message?: string;
+    warning?: string;
+    product?: Product;
+};
+
 export type UserComment = {
-    id: string,
+    id: string;
+    parent_id: string;
     name: string;
     photo: Image;
-    comment: string;
+    comments: comment[];
+    product_id?: string;
 }
 
-interface Rating {
+interface comment {
+    comment: string,
+    timestamp: string
+}
+
+export type Rating = {
     likes: number,
     dislikes: number
 }
@@ -101,6 +118,12 @@ export type User = {
     password?: string;
     access?: "read-only" | "admin" | "full-control"
 }
+
+export type ArtisanProfile = {
+    artisan: Artisan;
+    products?: Products;
+}
+
 
 // type Users = Array<User>;
 

@@ -408,4 +408,6 @@ export const placeholders = {
     male_profile_picture: "/placeholders/male-profile-placeholder-image.png",
     female_profile_picture: "/placeholders/female-profile-placeholder-image.png",
     unisex_profile_picture: "/placeholders/default-avatar-profile-icon.png",
+    artisan_profile_banner: "/placeholders/default-artisan-profile-banner.jpg",
+    missing_image: "/placeholders/missing-image.png"
 }

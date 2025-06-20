@@ -1,5 +1,5 @@
 import postgres from "postgres";
-import { HeroContent, Collections, Artisans, Products, Artisan } from "./definitions";
+import { HeroContent, Collections, Artisans, Products, Artisan, Product, ProductImage, Rating, UserComment } from "./definitions";
 import { formatCurrency } from "./utils";
 import { placeholders } from "./placeholder-data";
 import { getSession } from "./auth";
@@ -129,3 +129,111 @@ export async function fetchArtisanById(id: string) {
     const artisan: Artisan = data[0];
     return artisan;
 }
+
+export async function fetchArtisanProfileById(id: string) {
+    try {
+        // get artisan
+        const artisans = await sql<Artisan[]>`SELECT * FROM artisan WHERE id = ${id}`;
+        // get products
+        const products = await sql<Product[]>`SELECT * FROM product WHERE owner_id = ${id}`;
+
+        const data = await Promise.all([
+            artisans,
+            products
+        ]);
+
+        // add to products
+        for (const product of data[1]) {
+            const product_id = product.id;
+            // get and add product images
+            const product_images = await sql<ProductImage[]>`SELECT * FROM product_image WHERE product_id = ${product_id}`;
+            product['product_images'] = product_images;
+            // get and add product rating
+            const no_of_likes = await sql`SELECT COUNT(rate) as likes FROM product_rating WHERE rate = 'like' AND product_id = ${product_id};`;
+            const no_of_dislikes = await sql`SELECT COUNT(rate) as dislikes FROM product_rating WHERE rate = 'dislike' AND product_id = ${product_id};`;
+            const rating: Rating = {
+                likes: parseInt(no_of_likes[0]['likes']) || 0,
+                dislikes: parseInt(no_of_dislikes[0]['dislikes']) || 0
+            }
+            product['rating'] = rating;
+            product['likes'] = rating.likes;
+            product['dislikes'] = rating.dislikes;
+            // get and add product comments
+            const comments = await sql<UserComment[]>`SELECT product_comment.id, product_comment.parent_id, product_comment.comments, product_comment.product_id, CONCAT(users.firstname, ' ', users.lastname) AS name, users.user_photo FROM product_comment JOIN users ON product_comment.user_id = users.id WHERE product_comment.product_id = ${product_id};`;
+            product['comments'] = comments;
+        }
+
+        const artisan = data[0][0];
+
+        return {
+            artisan,
+            products
+        };
+    } catch (error) {
+        console.error('Database Error: ', error);
+        throw new Error("Failed to fetch artisan profile data");
+    }
+
+}
+
+// PRODUCT QUERIES
+export async function fetchProductDetailById(id: string) {
+    const product_detail = await sql<Product[]>`SELECT * from product WHERE id = ${id};`;
+    return product_detail[0];
+}
+
+export const fetchArtisanProductById = cache(async (artisanId: string, productId: string) => {
+    try {
+        // get artisan
+        const artisans = await sql<Artisan[]>`SELECT * FROM artisan WHERE id = ${artisanId}`;
+        // get products
+        const products = await sql<Product[]>`SELECT * FROM product WHERE id = ${productId} AND owner_id = ${artisanId}`;
+
+        const data = await Promise.all([
+            artisans,
+            products
+        ]);
+
+        // get and add to products
+        const product = data[1][0];
+        const product_id = product.id;
+        // get and add product images
+        const product_images = await sql<ProductImage[]>`SELECT * FROM product_image WHERE product_id = ${product_id}`;
+        product['product_images'] = product_images;
+        // get and add product rating
+        const no_of_likes = await sql`SELECT COUNT(rate) as likes FROM product_rating WHERE rate = 'like' AND product_id = ${product_id};`;
+        const no_of_dislikes = await sql`SELECT COUNT(rate) as dislikes FROM product_rating WHERE rate = 'dislike' AND product_id = ${product_id};`;
+        const rating: Rating = {
+            likes: parseInt(no_of_likes[0]['likes']) || 0,
+            dislikes: parseInt(no_of_dislikes[0]['dislikes']) || 0
+        }
+        product['rating'] = rating;
+        product['likes'] = rating.likes;
+        product['dislikes'] = rating.dislikes;
+        // get and add product comments
+        const comments = await sql<UserComment[]>`SELECT product_comment.id, product_comment.parent_id, product_comment.comments, product_comment.product_id, CONCAT(users.firstname, ' ', users.lastname) AS name, users.user_photo FROM product_comment JOIN users ON product_comment.user_id = users.id WHERE product_comment.product_id = ${product_id};`;
+        
+        product['comments'] = comments;
+
+        // add artisan to product as owner
+        const artisan = data[0][0];
+        product['owner'] = artisan;
+
+        return product
+    } catch (error) {
+        console.error('Database Error: ', error);
+        throw new Error("Failed to fetch product data");
+    }
+})
+
+
+// GENERAL QUERIES
+export const fetchCollectionTitles = cache(async () => {
+    try {
+        const data = await sql<[{ id: string, title: string }]>`SELECT id, title FROM collection;`;
+        return data;
+    } catch (error) {
+        console.error('Database Error: ', error);
+        throw new Error('Failded to fetch collection titles.');
+    }
+})

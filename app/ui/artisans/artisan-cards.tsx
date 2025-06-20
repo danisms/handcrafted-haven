@@ -9,6 +9,7 @@ import DisplayEmpty from "../display-empty";
 import { DeleteArtisanProfile, UpdateArtisanProfile } from "./buttons";
 
 export async function ArtisanCards(artisansData: Artisans, parentDirectory: string, editable: boolean = false) {
+    let uniqueCollectionCount = 0;
     return (
         <>
             {artisansData.map(artisan => (
@@ -22,7 +23,8 @@ export async function ArtisanCards(artisansData: Artisans, parentDirectory: stri
                                 <h3>Feature Collections</h3>
                                 <ul className="list-disc pl-6">
                                     {artisan.artisan_collections?.map(collection_title => (
-                                        <li key={collection_title.title}>
+                                        
+                                        <li key={uniqueCollectionCount++}>
                                             {collection_title.title}
                                         </li>
                                     ))}

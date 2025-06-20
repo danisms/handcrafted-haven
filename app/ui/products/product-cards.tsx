@@ -3,6 +3,43 @@ import Image from "next/image";
 import Link from "next/link";
 import { DOMPurify } from "dompurify";
 import { formatCurrency, formatNumber, sliceText } from "@/app/lib/utils";
+import { Products } from "@/app/lib/definitions";
+import { FaEye, FaThumbsDown, FaThumbsUp } from "react-icons/fa";
+import { placeholders } from "@/app/lib/placeholder-data";
+import { DeleteArtisanProduct, UpdateArtisanProduct } from "./buttons";
+
+export function ProductCards({ products, editable = false }: { products: Products, editable: boolean }) {
+    return (
+        <>
+            {products.map(product => (
+                <div key={product.id} className="productHolder">
+                    <div className="productDetailHolder">
+                        <Link href={`/profile/${product.owner_id}/${product.id}`}>
+                            <div className="image-holder">
+                                <Image src={product.product_images[0]?.source || placeholders.missing_image} alt={product.product_images[0]?.alt || "Missing Image Placeholder"} width={350} height={300} />
+                            </div>
+                            <div className="product-buttons-holder">
+                                <Link href={`/products/${product.id}`}><button>VIEW <FaEye /></button></Link>
+                                <span>{`(${formatNumber(product.likes)})`}<FaThumbsUp style={{ display: 'inline-block' }} /></span>
+                                <span>{`(${formatNumber(product.dislikes)})`}<FaThumbsDown /></span>
+                            </div>
+                            <p className="product-about" dangerouslySetInnerHTML={{ __html: sliceText(product.description, 180, false) }} />
+                        </Link>
+                    </div>
+                    <div className="cardTagsHolder">
+                        <h3 className="cardTag">{formatCurrency(product.price)}</h3>
+                        {editable ? (
+                            <>
+                                <UpdateArtisanProduct artisan_id={product.owner_id} product_id={product.id} />
+                                <DeleteArtisanProduct artisan_id={product.owner_id} product_id={product.id} />
+                            </>
+                        ) : null}
+                    </div>
+                </div>
+            ))}
+        </>
+    );
+}
 
 export async function MostRatedProductCards() {
     const topRatedProducts = await fetchMostRatedProducts();

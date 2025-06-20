@@ -394,5 +394,388 @@ export async function updateArtisanData(_prevState: any, formData: FormData) {
     }
 }
 
+/**************
+*** PRODUCT *** 
+**************/
+const ProductFormSchema = z.object({
+    id: z.string(),
+    product_name: z.string().min(1, 'Name is required'),
+    description: z.string().min(20, "Product Description must be a minimum of 20 characters"),
+    price: z.number().nonnegative("Price can not have a nagative value"),
+    collection_id: z.string().min(1, "Choose from the collection list")
+});
+
+const AddProduct = ProductFormSchema.omit({ id: true });
+
+export async function addArtisanProduct(_prevState: any, formData: FormData) {
+    try {
+        // Validate input data
+        const validatedData = AddProduct.safeParse({
+            product_name: formData.get('title')?.toString().toLowerCase(),
+            description: formData.get('description')?.toString(),
+            price: parseFloat(formData.get('price').toString()),
+            collection_id: formData.get('collection')?.toString()
+        });
+
+        if (!validatedData.success) {
+            const errorMessages = Object.entries(validatedData.error.flatten().fieldErrors)
+                .map(([field, errors]) => `${field}: ${errors?.join(', ')}`)
+                .join('\n');
+            throw new Error(errorMessages);
+        }
+
+        const { product_name, description, price, collection_id } = validatedData.data;
+        const artisanId = formData.get('artisan_id').toString();
+
+        const product_db_price = price > 0 ? price * 100 : null;  // convert price to cent
+
+        // Get user session
+        const session = await getSession();
+        const user_id = session.user.id;
+
+        if (!session) {
+            throw new Error("Unauthorized: Please log in to add product");
+        } else {
+            // check if user own artisan profile
+            const artisan_user = await sql`SELECT id FROM artisan WHERE id = ${artisanId} AND user_id = ${user_id};`;
+            if (artisan_user.length <= 0) {
+                throw new Error("Unauthorized: You are not authorized to add product to this artisan profile");
+            }
+        }
+
+        // add product record
+        const result = await sql`
+            INSERT INTO product (name, description, price, owner_id, collection_id)
+            VALUES (${product_name}, ${description}, ${product_db_price}, ${artisanId}, ${collection_id})
+            RETURNING id, name, description, price, collection_id, owner_id;
+        `;
+
+        if (result.length === 0) {
+            throw new Error("Failed to add product");
+        }
+
+        const artisan_id = result[0].owner_id;
+        const product_id = result[0].id;
+        const successMessages: string[] = ["product added successfully"];
+        let hasFileUploadError = false;
+        let fileUploadError = "";
+
+        // Handle profile photo upload
+        const productImage = formData.get('product_image') as File;
+        if (productImage && productImage.size > 0) {
+            try {
+                const currentDate = new Date().toString();
+
+                const artisan_product_image_path = `artisans/${artisan_id}/products/${product_id}`;
+                const uploadResult = await UPLOADFILE(
+                    formData,
+                    'product_image',
+                    artisan_product_image_path,
+                    fileMimeTypes.imageTypes,
+                    fileSizes.image.large_image_max_size
+                );
+
+                console.log("UPDATE product_image RESULT: ", uploadResult);
+                if (uploadResult.success) {
+                    console.log("SUPPOSED TO HAVE UPLOAD IMAGE 1");
+                    await sql`
+                        INSERT INTO product_image (source, alt, product_id) VALUES (${uploadResult.url}, ${`image of product ${product_id} at ${currentDate}`}, ${product_id});
+                    `;
+                    successMessages.push("Product image uploaded successfully");
+                } else {
+                    hasFileUploadError = true;
+                    fileUploadError += `Product Image: ${uploadResult.error}\n`;
+                }
+            } catch (error) {
+                hasFileUploadError = true;
+                fileUploadError += `Product Image: ${error instanceof Error ? error.message : 'Upload failed'}\n`;
+                console.error("UPLOAD ERROR: ", error);
+            }
+        }
+
+        // Handle banner upload
+        const productImage2 = formData.get('product_image_2') as File;
+        if (productImage2 && productImage2.size > 0) {
+            try {
+                const currentDate = new Date().toString();
+
+                const product_image_2_path = `artisans/${artisan_id}/products/${product_id}`;
+                const uploadResult = await UPLOADFILE(
+                    formData,
+                    'product_image_2',
+                    product_image_2_path,
+                    fileMimeTypes.imageTypes,
+                    fileSizes.image.large_image_max_size
+                );
+
+                console.log("UPDATE product_image_2 RESULT: ", uploadResult);
+
+                if (uploadResult.success) {
+                    console.log("SUPPOSED TO HAVE UPLOAD IMAGE 2");
+                    await sql`
+                        INSERT INTO product_image (source, alt, product_id) VALUES (${uploadResult.url}, ${`image of product ${product_id} at ${currentDate}`}, ${product_id});
+                    `;
+                    successMessages.push("Product image 2 uploaded successfully");
+                } else {
+                    hasFileUploadError = true;
+                    fileUploadError += `Product Image 2: ${uploadResult.error}\n`;
+                }
+            } catch (error) {
+                hasFileUploadError = true;
+                fileUploadError += `Product Image 2: ${error instanceof Error ? error.message : 'Upload failed'}\n`;
+                console.error("UPLOAD ERROR: ", error);
+            }
+        }
+
+        // Revalidate path and return result
+        revalidatePath(`/profile/${artisanId}`);
+
+        return {
+            product: result[0],
+            message: successMessages.join('\n'),
+            ...(hasFileUploadError && {
+                warning: "Product added but some files failed to upload:\n" + fileUploadError
+            }),
+            success: true
+        };
+
+    } catch (error) {
+        console.error('Error adding product:', error);
+
+        // Return error in a format that useActionState can handle
+        return {
+            error: error instanceof Error ? error.message : 'Failed to add product',
+            success: false,
+            warning: null,
+            message: null,
+            product: null
+        };
+    }
+}
 
 
+export async function updateArtisanProduct(_prevState: any, formData: FormData) {
+    try {
+        // Validate input data
+        const validatedData = ProductFormSchema.safeParse({
+            id: formData.get('product_id')?.toString(),
+            product_name: formData.get('title')?.toString().toLowerCase(),
+            description: formData.get('description')?.toString(),
+            price: parseFloat(formData.get('price').toString()),
+            collection_id: formData.get('collection')?.toString()
+        });
+
+        if (!validatedData.success) {
+            const errorMessages = Object.entries(validatedData.error.flatten().fieldErrors)
+                .map(([field, errors]) => `${field}: ${errors?.join(', ')}`)
+                .join('\n');
+            throw new Error(errorMessages);
+        }
+
+        const { id, product_name, description, price, collection_id } = validatedData.data;
+        const artisanId = formData.get('artisan_id').toString();
+
+        const product_db_price = price > 0 ? price * 100 : null;  // convert price to cent
+
+        // Get user session
+        const session = await getSession();
+        const user_id = session.user.id;
+
+        if (!session) {
+            throw new Error("Unauthorized: Please log in to add product");
+        } else {
+            // check if user own artisan profile
+            const artisan_user = await sql`SELECT id FROM artisan WHERE id = ${artisanId} AND user_id = ${user_id};`;
+            if (artisan_user.length <= 0) {
+                throw new Error("Unauthorized: You are not authorized to add product to this artisan profile");
+            }
+        }
+
+        // update product record
+        const result = await sql`
+            UPDATE product SET name = ${product_name}, 
+            description = ${description}, 
+            price = ${product_db_price}, 
+            owner_id = ${artisanId}, 
+            collection_id = ${collection_id} 
+            WHERE id = ${id}
+            RETURNING id, name, description, price, collection_id, owner_id;
+        `;
+
+        if (result.length === 0) {
+            throw new Error("Failed to update product");
+        }
+
+        const successMessages: string[] = ["product updated successfully"];
+
+        // // HANDEL FILE UPLOAD IF ANY
+        // const artisan_id = result[0].owner_id;
+        // const product_id = result[0].id;
+        // let hasFileUploadError = false;
+        // let fileUploadError = "";
+
+        // // Handle product image upload
+        // const productImage = formData.get('product_image') as File;
+        // if (productImage && productImage.size > 0) {
+        //     try {
+        //         const currentDate = new Date().toString();
+
+        //         const artisan_product_image_path = `artisans/${artisan_id}/products/${product_id}`;
+        //         const uploadResult = await UPLOADFILE(
+        //             formData,
+        //             'product_image',
+        //             artisan_product_image_path,
+        //             fileMimeTypes.imageTypes,
+        //             fileSizes.image.large_image_max_size
+        //         );
+
+        //         console.log("UPDATE product_image RESULT: ", uploadResult);
+        //         if (uploadResult.success) {
+        //             console.log("SUPPOSED TO HAVE UPLOAD IMAGE 1");
+        //             await sql`
+        //                 INSERT INTO product_image (source, alt, product_id) VALUES (${uploadResult.url}, ${`image of product ${product_id} at ${currentDate}`}, ${product_id});
+        //             `;
+        //             successMessages.push("Product image uploaded successfully");
+        //         } else {
+        //             hasFileUploadError = true;
+        //             fileUploadError += `Product Image: ${uploadResult.error}\n`;
+        //         }
+        //     } catch (error) {
+        //         hasFileUploadError = true;
+        //         fileUploadError += `Product Image: ${error instanceof Error ? error.message : 'Upload failed'}\n`;
+        //         console.error("UPLOAD ERROR: ", error);
+        //     }
+        // }
+
+        // // Handle product image upload
+        // const productImage2 = formData.get('product_image_2') as File;
+        // if (productImage2 && productImage2.size > 0) {
+        //     try {
+        //         const currentDate = new Date().toString();
+
+        //         const product_image_2_path = `artisans/${artisan_id}/products/${product_id}`;
+        //         const uploadResult = await UPLOADFILE(
+        //             formData,
+        //             'product_image_2',
+        //             product_image_2_path,
+        //             fileMimeTypes.imageTypes,
+        //             fileSizes.image.large_image_max_size
+        //         );
+
+        //         console.log("UPDATE product_image_2 RESULT: ", uploadResult);
+
+        //         if (uploadResult.success) {
+        //             console.log("SUPPOSED TO HAVE UPLOAD IMAGE 2");
+        //             await sql`
+        //                 INSERT INTO product_image (source, alt, product_id) VALUES (${uploadResult.url}, ${`image of product ${product_id} at ${currentDate}`}, ${product_id});
+        //             `;
+        //             successMessages.push("Product image 2 uploaded successfully");
+        //         } else {
+        //             hasFileUploadError = true;
+        //             fileUploadError += `Product Image 2: ${uploadResult.error}\n`;
+        //         }
+        //     } catch (error) {
+        //         hasFileUploadError = true;
+        //         fileUploadError += `Product Image 2: ${error instanceof Error ? error.message : 'Upload failed'}\n`;
+        //         console.error("UPLOAD ERROR: ", error);
+        //     }
+        // }
+
+        // Revalidate path and return result
+        revalidatePath(`/profile/${artisanId}`);
+
+        return {
+            product: result[0],
+            message: successMessages.join('\n'),
+            success: true
+        };
+
+    } catch (error) {
+        console.error('Error adding product:', error);
+
+        // Return error in a format that useActionState can handle
+        return {
+            error: error instanceof Error ? error.message : 'Failed to add product',
+            success: false,
+            warning: null,
+            message: null,
+            product: null
+        };
+    }
+}
+
+
+const CommentFormSchema = z.object({
+    id: z.string(),
+    parent_id: z.string(),
+    productId: z.string(),
+    comment: z.string().min(1, "Comment can not be empty"),
+});
+
+const AddParentComment = CommentFormSchema.omit({ id: true, parent_id: true });
+export async function addArtisanProductComment(_prevState: any, formData: FormData) {
+    try {
+        // Validate input data
+        const validatedData = AddParentComment.safeParse({
+            productId: formData.get('product_id')?.toString(),
+            comment: formData.get('comment')?.toString()
+        });
+
+        if (!validatedData.success) {
+            const errorMessages = Object.entries(validatedData.error.flatten().fieldErrors)
+                .map(([field, errors]) => `${field}: ${errors?.join(', ')}`)
+                .join('\n');
+            throw new Error(errorMessages);
+        }
+
+        const { productId, comment } = validatedData.data;
+        const currentURL = formData.get('current_url').toString();
+
+        // Get user session
+        const session = await getSession();
+        const user_id = session.user.id;
+
+        if (!session) {
+            throw new Error("Unauthorized: Please log in to add product comment");
+        }
+
+        // prepare comments
+        const comments = JSON.stringify([
+            {
+                comment: comment,
+                timestamp: Date.now()
+            }
+        ])
+
+        // add product comment to record
+        const result = await sql`
+            INSERT INTO product_comment (comments, product_id, user_id)
+            VALUES (${comments}, ${productId}, ${user_id})
+            RETURNING id;
+        `;
+
+        if (result.length === 0) {
+            throw new Error("Failed to add comment");
+        }
+
+        const successMessages: string[] = ["comment added successfully"];
+
+        // Revalidate path and return result
+        revalidatePath(currentURL);
+
+        return {
+            message: successMessages.join('\n'),
+            success: true
+        };
+
+    } catch (error) {
+        console.error('Error adding comment:', error);
+
+        // Returning error in a format that useActionState can handle
+        return {
+            error: error instanceof Error ? error.message : 'Failed to add comment',
+            success: false,
+            message: null,
+        };
+    }
+}

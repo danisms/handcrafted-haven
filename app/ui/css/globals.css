@@ -54,6 +54,8 @@
   --base-spacing: 0.5rem;
   --large-spacing: 1rem;
   --huge-spacing: 2rem;
+
+  --large-screen-max-width: 100%;
 }
 
 /* Uncomment to allow dark mode checking & theme selection based on computer user preference
@@ -64,7 +66,6 @@
   }
 } */
 
-
 /* Global Styles */
 * {
   box-sizing: border-box;
@@ -73,6 +74,7 @@
 html,
 body {
   height: 100%;
+  scroll-behavior: smooth;
 }
 
 body {
@@ -133,11 +135,15 @@ button {
   padding: 0.6em 1.2em;
   border-radius: 4px;
   cursor: pointer;
-  transition: background-color 0.3s ease;
+  transition: all 0.3s ease;
 }
 
 button:hover {
   background-color: var(--color-hover);
+}
+
+button:active {
+  transform: scale(0.9);
 }
 
 .buttons-holder {
@@ -153,12 +159,29 @@ img {
   height: auto;
 }
 
+.inline-image {
+  display: inline;
+}
+
+.inline-image-holder {
+  width: 150px;
+  height: 150px;
+  display: inline-block;
+  /* border-radius: 100%; */
+  overflow: hidden;
+}
+
+svg {
+  justify-self: center;
+}
+
 .shade {
   width: 100%;
   height: 100%;
   display: block;
   background-color: rgba(0, 0, 0, 0.25);
 }
+
 
 /* GENERAL FORM STYLING */
 form>div {
@@ -180,6 +203,7 @@ form>div input {
   border: 1px solid var(--color-primary);
   outline: none;
   font-size: 1em;
+  text-transform: capitalize;
 }
 
 form>div input:focus,
@@ -212,6 +236,15 @@ form>div input[type="radio"]:focus {
   border: 2px solid var(--color-primary);
 }
 
+input[type="search"],
+select {
+  padding: .5rem;
+  border: 1px solid var(--color-hover);
+  border-radius: 10px;
+  max-width: 250px;
+  width: fit-content;
+}
+
 .radio-btn-text {
   font-size: .9em;
 }
@@ -227,6 +260,12 @@ form>div input[type="radio"]:focus {
   cursor: pointer;
   align-items: center;
   text-align: center;
+}
+
+select {
+  text-transform: capitalize;
+  border: 1px solid var(--color-primary);
+  outline: none;
 }
 
 .submit-btn {
@@ -440,6 +479,80 @@ main section {
   grid-column: 1/3;
 }
 
+/*** ARTISAN PROFILE STYLING ***/
+.artisan-profile-header {
+  height: 40vh;
+  display: grid;
+}
+
+.artisan-photo-holder {
+  width: 150px;
+  height: 150px;
+  border-radius: 100%;
+  overflow: hidden;
+  align-self: center;
+  justify-self: center;
+  border: 1px solid var(--color-background);
+}
+
+.artisan-title-holder {
+  display: grid;
+  justify-content: center;
+  align-content: center;
+  text-align: center;
+  width: fit-content;
+  padding: var(--base-spacing);
+  justify-self: center;
+  align-self: center;
+  background-color: rgba(0, 0, 0, 0.8);
+  border-radius: 5px;
+}
+
+.artisan-title {
+  text-shadow: 0 0 1px var(--color-primary);
+  color: var(--color-text-light);
+}
+
+.profile-interactive-space-holder {
+  padding: var(--base-spacing);
+  display: grid;
+  grid-template-columns: auto auto;
+  column-gap: var(--base-spacing);
+}
+
+.profile-interactive-space-holder select {
+  justify-self: self-end;
+}
+
+.add-product-btn-holder {
+  padding: var(--base-spacing);
+}
+
+.products-holder {
+  padding: var(--base-spacing);
+}
+
+
+.product-buttons-holder {
+  display: grid;
+  grid-template-columns: auto 1fr 1fr;
+  /* background-color: yellowgreen; */
+  align-content: center;
+  align-items: center;
+}
+
+.product-buttons-holder span {
+  width: 100%;
+  height: fit-content;
+  text-align: center;
+  font-size: 1.5em;
+}
+
+.product-buttons-holder span svg {
+  display: inline-block;
+  color: var(--color-accent);
+}
+
 /*** ARTISAN STYLING END */
 
 
@@ -448,7 +561,7 @@ main section {
 ****************************/
 .productHolder {
   width: 350px;
-  height: auto;
+  height: 100%;
   border: 1px solid var(--color-primary);
   border-radius: 10px;
   padding: var(--small-spacing);
@@ -533,7 +646,8 @@ main section {
 /******************************
 **** PROFILE STYLING START ****
 ******************************/
-.artisans-profiles-holder {
+.artisans-profiles-holder,
+.products-holder {
   display: grid;
   padding: var(--base-spacing);
   gap: var(--base-spacing);
@@ -542,6 +656,193 @@ main section {
   background: none;
 }
 
+
+/****************************************
+*** PRODUCT DETAIL PAGE STYLING START ***
+****************************************/
+.product-detail-page-main-holder {
+  padding: var(--base-spacing);
+}
+
+.product-detail-page-main-holder .title {
+  font-weight: 400;
+}
+
+.product-detail-page-main-holder p {
+  padding: var(--base-spacing);
+  border: 1px solid var(--color-primary);
+  border-radius: 5px;
+}
+
+.product-detail-page-main-holder .product-name {
+  width: 100%;
+  max-width: var(--large-screen-max-width);
+  margin-left: auto;
+  margin-right: auto;
+  text-align: left;
+}
+
+.product-detail-page-main-holder .product-gallery-holder {
+  background: none;
+  padding: var(--base-padding);
+  max-width: var(--large-screen-max-width);
+  margin-left: auto;
+  margin-right: auto;
+  border-radius: 0.75rem;
+}
+
+.product-detail-page-main-holder .price-tag {
+  background-color: var(--color-hover);
+  z-index: 1;
+}
+
+.gallery-main-display-holder {
+  background: none;
+}
+
+.gallery-nav-btn {
+  background-color: rgba(0, 0, 0, 0.25);
+}
+
+.gallery-thumbnails-holder {
+  width: fit-content;
+  display: flex;
+  justify-self: center;
+  overflow: auto;
+  scrollbar-width: thin;
+}
+
+.gallery-thumbnails-holder>* {
+  grid-row: 1/2;
+  width: 100px;
+}
+
+.product-interactive-buttons-holder {
+  max-width: var(--large-screen-max-width);
+  display: flex;
+  padding: var(--base-spacing);
+  margin: var(--base-spacing);
+  margin-left: auto;
+  margin-right: auto;
+  border: 1px solid var(--color-primary);
+  border-radius: 5px;
+  justify-content: space-between;
+}
+
+.buy-product-btn {
+  background-color: var(--color-accent);
+}
+
+.buy-product-btn:hover {
+  background-color: rgb(85, 143, 85);
+}
+
+.rating-buttons-holder {
+  display: flex;
+  border: 1px solid var(--color-primary);
+  border-radius: 5px;
+  width: fit-content;
+}
+
+.rating-btn {
+  width: fit-content;
+  display: flex;
+  gap: .5rem;
+  background: none;
+  color: var(--color-text);
+  font-weight: bold;
+  font-size: 1.6em;
+  align-content: center;
+  align-items: center;
+}
+
+.rating-btn:hover {
+  background-color: rgba(0, 0, 0, 0.1);
+  border-radius: 0;
+}
+
+/* Add Product Comment Styling */
+.add-comment-outer-holder {
+  margin-top: var(--base-spacing);
+}
+
+.add-comment-holder {
+  border: none;
+  margin-top: var(--large-spacing);
+}
+
+.add-comment-holder form {
+  width: 100%;
+  display: grid;
+  align-content: center;
+  align-items: center;
+  justify-content: center;
+  justify-items: center;
+}
+
+.add-comment-holder div {
+  border: none;
+  margin-bottom: 0;
+}
+
+.add-comment-holder form button {
+  width: fit-content;
+  height: fit-content;
+}
+
+/* Product Comments Display Styling */
+.product-comments-holder {
+  display: grid;
+  gap: var(--large-spacing);
+  max-height: 70vh;
+  overflow: auto;
+  scrollbar-width: thin;
+}
+
+.comment-holder {
+  display: grid;
+  grid-template-columns: auto 1fr;
+  max-width: 100%;
+  width: fit-content;
+  box-shadow: 0 0 2px var(--color-contrast-accent);
+  border-radius: 5px;
+  padding: var(--base-spacing);
+  gap: var(--base-spacing);
+}
+
+.comment-holder .comment-image-holder {
+  width: 80px;
+  height: 80px;
+  border-radius: 100%;
+  display: grid;
+  align-content: center;
+  justify-content: center;
+  overflow: hidden;
+}
+
+.comment-holder .comment-detail-holder {
+  font-family: var(--font-body);
+}
+
+.comment-detail-holder .commenter-name {
+  font-weight: 300;
+  font-size: 1.3em;
+  text-transform: capitalize;
+}
+
+.comment-detail-holder .comment-box {
+
+}
+
+.comment-detail-holder .comment-date {
+  font-style: italic;
+  opacity: .9;
+  font-size: .8em;
+}
+
+
+
+/* END PRODUCT DETAIL PAGE STYLING */
 
 /* FOOTER STYLING */
 .footer-logo {
@@ -590,9 +891,25 @@ main section {
     width: 450px;
   }
 
+  /*** ARTISAN PROFILE STYLING ***/
+  .artisan-profile-header {
+    height: 40vh;
+    grid-template-columns: auto 1fr;
+  }
+
+  .artisan-photo-holder {
+    width: 180px;
+    height: 180px;
+    margin: var(--base-spacing);
+    display: grid;
+    align-content: center;
+  }
+
+
   /* COLLECTION STYLING START */
   .productHolder {
-    width: 450px;
+    /* width: 450px; */
+    width: 400px;
   }
 
   /******************************
@@ -601,5 +918,29 @@ main section {
   /* Developer Card Styling */
   .devHolder {
     width: 450px;
+  }
+
+
+  /****************************************
+  *** PRODUCT DETAIL PAGE STYLING START ***
+  ****************************************/
+  .product-detail-page-main-holder .product-gallery-holder {
+    background: #f5e9d6;
+    padding: 1.5rem;
+    box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1),
+      0 4px 6px -2px rgba(0, 0, 0, 0.05);
+    border: 1px solid #e0d2ba;
+  }
+
+  .gallery-nav-btn {
+    background-color: var(--color-primary);
+  }
+
+  .gallery-nav-btn:hover {
+    background-color: var(--color-hover);
+  }
+
+  .gallery-thumbnails-holder>* {
+    width: 150px;
   }
 }
