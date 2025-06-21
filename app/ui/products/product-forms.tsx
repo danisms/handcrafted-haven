@@ -7,7 +7,6 @@ import { addProduct, editArtisanProduct, addProductComment } from '@/app/lib/act
 import { Product, ProductFormState, UserComment } from '@/app/lib/definitions';
 import { toast } from "sonner";
 import { SpinnerIcon } from "../component/icons";
-import { MessageCircle } from "lucide-react";
 
 export function AddProductForm({ artisan_id, collectionTitles }: { artisan_id: string, collectionTitles: [{ id: string, title: string }] }) {
     const searchParams = useSearchParams();
@@ -45,7 +44,6 @@ export function AddProductForm({ artisan_id, collectionTitles }: { artisan_id: s
         // do nothing.
     }
 
-    // Rest of your JSX remains the same...
     return (
         <>
             <h1 style={{ textAlign: 'center' }}>

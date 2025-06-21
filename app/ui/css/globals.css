@@ -182,6 +182,10 @@ svg {
   background-color: rgba(0, 0, 0, 0.25);
 }
 
+header {
+  z-index: 2;
+}
+
 
 /* GENERAL FORM STYLING */
 form>div {
@@ -731,6 +735,7 @@ main section {
 
 .buy-product-btn {
   background-color: var(--color-accent);
+  height: 100%;
 }
 
 .buy-product-btn:hover {

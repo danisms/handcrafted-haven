@@ -10,6 +10,7 @@ import { placeholders } from '@/app/lib/placeholder-data';
 import { DisplayComments } from '../component/bread-crumbs';
 import { AddProductComment } from './product-forms';
 import { LikeDislikeProductButtons } from './buttons';
+import Link from 'next/link';
 
 export function ProductDetail({ product_data }: { product_data: Product }) {
     const productImages = product_data.product_images;
@@ -36,7 +37,7 @@ export function ProductDetail({ product_data }: { product_data: Product }) {
                 </div>
             </div>
             <div className="product-interactive-buttons-holder">
-                <button className="buy-product-btn">BUY</button>
+                <Link href={`/purchase/${product_data.id}`}><button className="buy-product-btn">BUY</button></Link>
                 <div className="rating-buttons-holder">
                     <LikeDislikeProductButtons product_data={product_data} />
                     <a href="#view-comments"><button className="rating-btn"><MessageSquare /> {formatNumber(product_data.comments.length)}</button></a>

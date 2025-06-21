@@ -84,7 +84,7 @@ export function DeleteArtisanPhoto({ id, photo_url }: { id: string, photo_url: s
         return () => {
             button.removeEventListener('click', handleClick);
         }
-    }, [isDeleted, id, photo_url]); // Add isDeleted to dependencies
+    }, [isDeleted]); // Add isDeleted to dependencies
 
     if (isDeleted) {
         return null; // Don't render anything if deleted
@@ -125,7 +125,7 @@ export function DeleteArtisanBanner({ id, photo_url }: { id: string, photo_url: 
         return () => {
             button.removeEventListener('click', handleClick);
         }
-    }, [isDeleted, id, photo_url]); // Add isDeleted to dependency array
+    }, [isDeleted]); // Add isDeleted to dependency array
 
     if (isDeleted) {
         return null; // Return nothing if deleted
@@ -138,17 +138,29 @@ export function DeleteArtisanBanner({ id, photo_url }: { id: string, photo_url: 
     );
 }
 
-
 export function LikeDislikeProductButtons({ product_data }: { product_data: Product }) {
     const [liked, setLiked] = useState(false);
     const [disliked, setDisliked] = useState(false);
-    const [likeCount, setLikeCount] = useState(product_data.rating.likes);
-    const [dislikeCount, setDislikeCount] = useState(product_data.rating.dislikes);
 
     const { data: session, status } = useSession();
+
+    let no_of_likes = product_data.rating.likes;
+    let no_of_dislikes = product_data.rating.dislikes;
     let product_id = product_data.id;
 
-    // set initial rating state
+    let initialRating = null;
+    if (product_data.my_rating) {
+        initialRating = product_data.my_rating;
+        if (initialRating === 'like') {
+            no_of_likes = no_of_likes - 1;
+        } else if (initialRating === 'dislike') {
+            no_of_dislikes = no_of_dislikes - 1;
+        } else {
+            // do nothing
+        }
+    }
+
+    // set rating
     useEffect(() => {
         if (product_data.my_rating) {
             const myRating = product_data.my_rating;
@@ -156,11 +168,9 @@ export function LikeDislikeProductButtons({ product_data }: { product_data: Prod
             if (myRating === 'like') {
                 setLiked(true);
                 setDisliked(false);
-                setLikeCount(prev => prev - 1); // Adjust count if needed
             } else if (myRating === 'dislike') {
                 setLiked(false);
                 setDisliked(true);
-                setDislikeCount(prev => prev - 1); // Adjust count if needed
             } else {
                 setLiked(false);
                 setDisliked(false);
@@ -168,7 +178,7 @@ export function LikeDislikeProductButtons({ product_data }: { product_data: Prod
         }
     }, [product_data.my_rating]);
 
-    let current_rating = null;
+    let current_rating: string | null = null;
     const like_state = "like";
     const dislike_state = "dislike";
 
@@ -176,13 +186,10 @@ export function LikeDislikeProductButtons({ product_data }: { product_data: Prod
         if (session?.user) {
             if (liked) {
                 setLiked(false);
-                setLikeCount(prev => prev - 1);
                 current_rating = null;
             } else {
                 setLiked(true);
-                setLikeCount(prev => disliked ? prev + 2 : prev + 1);
                 setDisliked(false);
-                setDislikeCount(prev => disliked ? prev - 1 : prev);
                 current_rating = like_state;
             }
 
@@ -196,13 +203,10 @@ export function LikeDislikeProductButtons({ product_data }: { product_data: Prod
         if (session?.user) {
             if (disliked) {
                 setDisliked(false);
-                setDislikeCount(prev => prev - 1);
                 current_rating = null;
             } else {
                 setDisliked(true);
-                setDislikeCount(prev => liked ? prev + 2 : prev + 1);
                 setLiked(false);
-                setLikeCount(prev => liked ? prev - 1 : prev);
                 current_rating = dislike_state;
             }
 
@@ -218,14 +222,14 @@ export function LikeDislikeProductButtons({ product_data }: { product_data: Prod
                 onClick={handleLike}
                 className={`flex items-center gap-1 rating-btn ${liked ? '!bg-blue-300 !text-black' : ''} hover:!bg-blue-100`}
             >
-                <ThumbsUp color="green" /> {formatNumber(likeCount)}
+                <ThumbsUp color="green" /> {liked ? formatNumber(no_of_likes + 1) : formatNumber(no_of_likes)}
             </button>
 
             <button
                 onClick={handleDislike}
                 className={`flex items-center gap-1 rating-btn ${disliked ? '!bg-red-300 !text-black' : ''} hover:!bg-red-100`}
             >
-                <ThumbsDown color="red" /> {formatNumber(dislikeCount)}
+                <ThumbsDown color="red" /> {disliked ? formatNumber(no_of_dislikes + 1) : formatNumber(no_of_dislikes)}
             </button>
         </>
     );

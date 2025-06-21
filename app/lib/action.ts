@@ -695,3 +695,20 @@ export async function updateRating(product_id: string, rating: string | null) {
         }
     }
 }
+
+
+export async function purchaseProduct(
+    _prevState: ProductFormState,
+    formData: FormData
+) {
+
+    // delay result
+    // await setTimeout(() => {return null}, 5000);
+
+    // Full success case
+    return {
+        success: true,
+        message: 'Product purchased successfully',
+        error: null
+    };
+}

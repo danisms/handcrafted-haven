@@ -17,6 +17,8 @@ export default function ThumbnailList({ images, selectedIndex, setSelectedIndex 
                     alt={`Thumbnail ${index}`}
                     onClick={() => setSelectedIndex(index)}
                     className={`rounded-lg cursor-pointer border-2 ${selectedIndex === index ? 'border-black' : 'border-transparent'}`}
+                    width={200}
+                    height={200}
                 />
             ))}
         </div>

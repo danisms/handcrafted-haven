@@ -28,6 +28,8 @@ export function ImageGallery({ images, selectedIndex, setSelectedIndex }: Props)
                     src={images[selectedIndex].source}
                     alt={`Main Image ${selectedIndex}`}
                     className="rounded-lg w-full max-h-[400px] object-contain"
+                    width={400}
+                    height={400}
                 />
 
                 <button
