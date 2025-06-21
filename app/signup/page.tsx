@@ -1,27 +1,26 @@
-import SignUpForm from '@/app/ui/signup-form';
-import { Suspense } from 'react';
-import { Metadata } from 'next';
-import { SimpleFooter } from '../components/footer';
-import Header from '../components/header';
+import SignUpForm from "@/app/ui/signup-form";
+import { Suspense } from "react";
+import { Metadata } from "next";
+import { SimpleFooter } from "../components/footer";
+import Header from "../components/header";
 
 export const metadata: Metadata = {
-  title: 'Sign Up',
+  title: "Sign Up",
 };
 
 export default function SignUpPage() {
   return (
-    <div className="min-h-screen flex flex-col">
+    <div className="min-h-screen flex flex-col bg-[#f5f0e6]">
       <Header />
-      <main className="flex items-center justify-center md:h-screen">
-        <div className="flex w-full max-w-md flex-col space-y-6 rounded-lg bg-white p-6 shadow-lg md:p-10">
-          <div className="flex h-20 w-full items-end rounded-lg p-3 md:h-36" style={{ backgroundColor: '#B3511D' }}>
-            <div className="w-32 text-white md:w-36">
-            </div>
-          </div>
+      <main className="flex justify-center items-center min-h-screen px-4 pb-20 bg-[#f5f0e6]">
+        <section className="bg-white rounded-2xl shadow-lg max-w-lg w-full p-8 sm:p-12">
+          <h1 className="text-4xl font-extrabold text-gray-900 mb-8 text-center">
+            Sign Up
+          </h1>
           <Suspense>
             <SignUpForm />
           </Suspense>
-        </div>
+        </section>
       </main>
       <SimpleFooter />
     </div>
