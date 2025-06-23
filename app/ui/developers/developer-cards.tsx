@@ -1,6 +1,6 @@
 import { developers } from "@/app/lib/developer-data";
 import Image from "next/image";
-import { sliceText } from "@/app/lib/utils";
+import { shouldOptimizeImage, sliceText } from "@/app/lib/utils";
 import { FaPhone, FaWhatsapp, FaTwitter, FaInstagram, FaFacebook, FaGithub, FaEnvelope, FaLinkedin } from "react-icons/fa";
 import { placeholders } from "@/app/lib/placeholder-data";
 
@@ -14,7 +14,7 @@ export function DevelopersCard() {
                 <div key={dev.id} className="devHolder">
                     <div className="devDetailHolder">
                         <div className="image-holder">
-                            <Image src={dev.photo_url ? dev.photo_url : placeholders.unisex_profile_picture} alt={`photo of ${dev.name ? dev.name : "a dev placeholder"}`} width={250} height={250} />
+                            <Image src={dev.photo_url ? dev.photo_url : placeholders.unisex_profile_picture} alt={`photo of ${dev.name ? dev.name : "a dev placeholder"}`} width={250} height={250} unoptimized={shouldOptimizeImage(dev?.photo_url)} />
                         </div>
                         <div className="about-section-holder">
                             <section>

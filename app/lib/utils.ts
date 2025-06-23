@@ -63,3 +63,8 @@ export function splitAndGetLast(text: string, seperator: string, maxLength: numb
     const splited = text.split(seperator);
     return sliceText(splited[splited.length - 1], maxLength, false);
 }
+
+export function shouldOptimizeImage(url: string): boolean {
+  return url?.includes('res.cloudinary.com');
+}
+

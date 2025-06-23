@@ -1,7 +1,7 @@
 'use client';
 
 import { Product } from '@/app/lib/definitions';
-import { formatCurrency, formatNumber, sliceText } from '@/app/lib/utils';
+import { formatCurrency, formatNumber, shouldOptimizeImage, sliceText } from '@/app/lib/utils';
 import { useState } from 'react';
 import { ImageGallery } from '../component/image-gallery';
 import { MessageSquare, ThumbsDown, ThumbsUp } from 'lucide-react';
@@ -55,7 +55,7 @@ export function ProductDetail({ product_data }: { product_data: Product }) {
                 <h3 className="title">About Artisan {`(${sliceText(artisanData.display_name, 20, false, true)})`}</h3>
                 <p>
                     <div className="inline-image-holder">
-                        <Image className="inline-image" src={artisanData.profile_photo} alt={`Photo of ${artisanData.display_name}`} width={100} height={100} />
+                        <Image className="inline-image" src={artisanData.profile_photo} alt={`Photo of ${artisanData.display_name}`} width={100} height={100} unoptimized={shouldOptimizeImage(artisanData.profile_photo)} />
                     </div>
                     <span dangerouslySetInnerHTML={{ __html: artisanData.about }} />
                 </p>

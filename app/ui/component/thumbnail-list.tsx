@@ -1,4 +1,5 @@
 import { ProductImage } from "@/app/lib/definitions";
+import { shouldOptimizeImage } from "@/app/lib/utils";
 import Image from "next/image";
 
 type Props = {
@@ -19,6 +20,7 @@ export default function ThumbnailList({ images, selectedIndex, setSelectedIndex 
                     className={`rounded-lg cursor-pointer border-2 ${selectedIndex === index ? 'border-black' : 'border-transparent'}`}
                     width={200}
                     height={200}
+                    unoptimized={shouldOptimizeImage(image.source)}
                 />
             ))}
         </div>

@@ -311,7 +311,7 @@ select {
 .display-empty {
   width: 100%;
   text-align: center;
-
+  grid-column: 1/5;
 }
 
 .childMain {
@@ -835,9 +835,7 @@ main section {
   text-transform: capitalize;
 }
 
-.comment-detail-holder .comment-box {
-
-}
+.comment-detail-holder .comment-box {}
 
 .comment-detail-holder .comment-date {
   font-style: italic;

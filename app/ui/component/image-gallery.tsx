@@ -2,6 +2,7 @@ import { ProductImage } from '@/app/lib/definitions';
 import ThumbnailList from './thumbnail-list';
 import { FaChevronLeft, FaChevronRight } from 'react-icons/fa';
 import Image from 'next/image';
+import { shouldOptimizeImage } from '@/app/lib/utils';
 
 type Props = {
     images: ProductImage[];
@@ -30,6 +31,7 @@ export function ImageGallery({ images, selectedIndex, setSelectedIndex }: Props)
                     className="rounded-lg w-full max-h-[400px] object-contain"
                     width={400}
                     height={400}
+                    unoptimized={shouldOptimizeImage(images[selectedIndex].source)}
                 />
 
                 <button

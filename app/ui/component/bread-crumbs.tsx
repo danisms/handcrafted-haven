@@ -1,6 +1,6 @@
 import { UserComment } from "@/app/lib/definitions";
 import { placeholders } from "@/app/lib/placeholder-data";
-import { formatDateToLocal, sliceText } from "@/app/lib/utils";
+import { formatDateToLocal, shouldOptimizeImage, sliceText } from "@/app/lib/utils";
 import Image from "next/image";
 
 export function DisplayComments({ comments }: { comments: UserComment[] }) {
@@ -25,7 +25,8 @@ export function DisplayComments({ comments }: { comments: UserComment[] }) {
         cleanComments.map((comment) => (
             <div className="comment-holder" key={comment.id}>
                 <div className="comment-image-holder">
-                    <Image src={comment?.photo?.source || placeholders.unisex_profile_picture} alt={`Photo of ${comment.name}`} width={100} height={100} />
+                    <Image src={comment?.photo?.source || placeholders.unisex_profile_picture} alt={`Photo of ${comment.name}`} width={100} height={100}
+                    unoptimized={shouldOptimizeImage(comment?.photo?.source)} />
                 </div>
                 <div className="comment-detail-holder">
                     <h4 className="commenter-name">{sliceText(comment.name, 20, false, true)}</h4>

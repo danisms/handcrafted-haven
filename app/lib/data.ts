@@ -1,6 +1,5 @@
 import postgres from "postgres";
 import { HeroContent, Collections, Artisans, Products, Artisan, Product, ProductImage, Rating, UserComment } from "./definitions";
-import { formatCurrency } from "./utils";
 import { placeholders } from "./placeholder-data";
 import { getSession } from "./auth";
 import { cache } from "react";
@@ -204,8 +203,8 @@ export const fetchArtisanProductById = cache(async (artisanId: string, productId
         const no_of_likes = await sql`SELECT COUNT(rate) as likes FROM product_rating WHERE rate = 'like' AND product_id = ${product_id};`;
         const no_of_dislikes = await sql`SELECT COUNT(rate) as dislikes FROM product_rating WHERE rate = 'dislike' AND product_id = ${product_id};`;
         const rating: Rating = {
-            likes: parseInt(no_of_likes[0]['likes']) || 0,
-            dislikes: parseInt(no_of_dislikes[0]['dislikes']) || 0
+            likes: parseInt(no_of_likes[0]?.likes) || 0,
+            dislikes: parseInt(no_of_dislikes[0]?.dislikes) || 0
         }
         product['rating'] = rating;
         product['likes'] = rating.likes;
@@ -214,7 +213,7 @@ export const fetchArtisanProductById = cache(async (artisanId: string, productId
         if (session.user) {
             const user_id = session.user.id;
             const my_rate = await sql`SELECT rate FROM product_rating WHERE product_id = ${product_id} AND user_id = ${user_id}`;
-            product['my_rating'] = my_rate[0]['rate'];
+            product['my_rating'] = my_rate[0]?.rate || null;
         }
         // get and add product comments
         const comments = await sql<UserComment[]>`SELECT product_comment.id, product_comment.parent_id, product_comment.comments, product_comment.product_id, CONCAT(users.firstname, ' ', users.lastname) AS name, users.user_photo FROM product_comment JOIN users ON product_comment.user_id = users.id WHERE product_comment.product_id = ${product_id};`;

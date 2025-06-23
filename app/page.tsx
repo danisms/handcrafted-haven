@@ -9,11 +9,16 @@ import { CollectionCards } from "./ui/collections/collection-cards";
 import { TopArtisans } from "./ui/artisans/artisan-cards";
 import { MostRatedProductCards } from "./ui/products/product-cards";
 import { DevelopersCard } from "./ui/developers/developer-cards";
+import { fetchMostRatedProducts } from "./lib/data";
 
 // Add meta data to overide the parent layout metadata
 export const metadata: Metadata = {
   title: 'Welcome to the Home of Handcrafts'
 }
+
+// fetch data
+const topRatedProducts = await fetchMostRatedProducts();
+
 
 export default function Page() {
   return (
@@ -50,7 +55,7 @@ export default function Page() {
           <h2>Most Rated</h2>
           <div className='most-rated-section slide-cards-container'>
             <Suspense fallback={<CardSkeleton />}>
-              <MostRatedProductCards />
+              <MostRatedProductCards topRatedProducts={topRatedProducts} />
             </Suspense>
           </div>
         </section>
