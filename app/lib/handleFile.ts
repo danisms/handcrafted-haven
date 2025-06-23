@@ -1,69 +1,124 @@
 import { writeFile, mkdir, unlink } from "fs/promises";
 import path from 'path';
 import { existsSync } from "fs";
+import { v2 as cloudinary } from 'cloudinary';
 
+// Configure Cloudinary
+cloudinary.config({
+    cloud_name: process.env.CLOUDINARY_CLOUD_NAME!,
+    api_key: process.env.CLOUDINARY_API_KEY!,
+    api_secret: process.env.CLOUDINARY_API_SECRET!,
+});
 
 // UPLOAD FILE
-export async function UPLOADFILE(formData: FormData, file_input_name: string, save_file_path: string, file_format: string[], max_file_size: number) {
+export async function UPLOADFILE(
+    formData: FormData,
+    file_input_name: string,
+    save_file_path: string,
+    allowed_types: string[],
+    max_size: number
+) {
     const file = formData.get(file_input_name) as File;
 
-    // check if file was uploaded
     if (!file) {
         return { success: false, error: 'No file uploaded' };
     }
-    // get file values
-    const filename = Date.now() + '-' + path.basename(file.name);
-    const fileType = file.type;  // mime type
-    const fileSize = file.size;  // in bytes
 
-    // check file format
-    if (!file_format.includes(fileType)) {
+    const fileType = file.type;
+    const fileSize = file.size;
+    const originalName = file.name;
+    const filename = `${Date.now()}-${path.basename(originalName)}`;
+
+    if (!allowed_types.includes(fileType)) {
         return { success: false, error: 'Unsupported file type' };
     }
 
-    // check file size
-    if (fileSize > max_file_size) {
+    if (fileSize > max_size) {
         return { success: false, error: 'File too large' };
     }
 
-    const directoryPath = path.join(process.cwd(), 'public', save_file_path);
-    const filePath = path.join(directoryPath, filename);
+    const buffer = Buffer.from(await file.arrayBuffer());
 
-    // Create directory if it doesn't exist
-    await mkdir(directoryPath, { recursive: true });
+    if (process.env.IN_PRODUCTION === 'true') {
+        // Upload to Cloudinary in production
+        try {
+            const result = await new Promise<any>((resolve, reject) => {
+                cloudinary.uploader.upload_stream(
+                    { folder: save_file_path }, // you can set a custom Cloudinary folder
+                    (error, result) => {
+                        if (error) return reject(error);
+                        resolve(result);
+                    }
+                ).end(buffer);
+            });
 
-    // check if file already exists
-    if (existsSync(filePath)) {
-        return { success: false, error: 'File already exists' };
+            return {
+                success: true,
+                url: result.secure_url,
+                cloudinary_id: result.public_id,
+                type: result.resource_type,
+                size: result.bytes,
+                name: result.original_filename,
+            };
+        } catch (err: any) {
+            return { success: false, error: err.message || 'Upload failed' };
+        }
+
+    } else {
+        // Save to local file system in development
+        try {
+            const directoryPath = path.join(process.cwd(), 'public', save_file_path);
+            const filePath = path.join(directoryPath, filename);
+
+            await mkdir(directoryPath, { recursive: true });
+
+            if (existsSync(filePath)) {
+                return { success: false, error: 'File already exists' };
+            }
+
+            await writeFile(filePath, buffer);
+
+            return {
+                success: true,
+                url: `/${save_file_path}/${filename}`,
+                db_path: path.join(save_file_path, filename),
+                type: fileType,
+                size: fileSize,
+                name: filename,
+            };
+        } catch (err: any) {
+            return { success: false, error: err.message || 'Upload failed' };
+        }
     }
-
-    // upload file
-    const bytes = await file.arrayBuffer();
-    const buffer = Buffer.from(bytes);
-
-    await writeFile(filePath, buffer);
-
-    return {
-        success: true,
-        url: `/${save_file_path}/${filename}`,
-        db_path: path.join(save_file_path, filename),
-        type: fileType,
-        size: fileSize,
-        name: filename
-    };
 }
+
 
 export async function DELETEFILE(filepath: string) {
     if (!filepath) {
         return { success: false, error: 'File path not provided' };
     }
 
-    const absolutePath = path.join(process.cwd(), 'public', filepath);
+    if (process.env.IN_PRODUCTION === 'true') {
+        // In production — delete from Cloudinary
+        try {
+            // Cloudinary public_id does not include the extension
+            // Example: "images/my-file.jpg" → public_id: "images/my-file"
+            const publicId = filepath.replace(/\.[^/.]+$/, ''); // remove file extension
 
-    try {
-        await unlink(absolutePath);
-        return { success: true, message: 'File deleted' };
-    } catch (err) {
-        return { success: false, error: 'Failed to delete file' };
+            await cloudinary.uploader.destroy(publicId);
+
+            return { success: true, message: 'Cloudinary file deleted' };
+        } catch (err: any) {
+            return { success: false, error: err.message || 'Cloudinary deletion failed' };
+        }
+    } else {
+        // In development — delete from local file system
+        try {
+            const absolutePath = path.join(process.cwd(), 'public', filepath);
+            await unlink(absolutePath);
+            return { success: true, message: 'Local file deleted' };
+        } catch (err: any) {
+            return { success: false, error: 'Failed to delete file' };
+        }
     }
 }
